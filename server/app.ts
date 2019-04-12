@@ -7,3 +7,7 @@ const app = express();
 app.get('/', (request : express.Request, response : express.Response) => {
     response.send(`<h1>Hello!</h1><p>We're just gettin' started. :)</p>`);
 });
+
+app.listen(PORT, () => {
+    console.log('The todo app has started successfully!');
+});

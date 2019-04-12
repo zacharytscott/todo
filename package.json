@@ -4,7 +4,8 @@
   "description": "A simple todo app",
   "main": "app.js",
   "scripts": {
-    "start": "node /server/app.js"
+    "build": "npx tsc ./server/app.ts",
+    "start": "node ./server/app.js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,8 @@
   },
   "homepage": "https://github.com/zacharytscott/todo#readme",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "forever": "^1.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.16.1",
