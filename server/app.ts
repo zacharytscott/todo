@@ -21,25 +21,71 @@ connection.once('open', () => {
 const routes = express.Router();
 
 routes.route('/').get((request : express.Request, response : express.Response) => {
-    //TODO: can these be typed better?
-    TodoModel.find((error : any, todos : any) => {
+    TodoModel.find((error : any, todos : mongoose.Document) => {
         response.json(todos);
+    });
+});
+
+routes.route('/:id').get((request : express.Request, response : express.Response) => {
+    const id = request.params.id;
+
+    TodoModel.findById(id, (error : any, todo : mongoose.Document) => {
+        response.json(todo)
     });
 });
 
 routes.route('/').post((request : express.Request, response : express.Response) => {
     const todo = new TodoModel(request.body);
+
     todo.save()
-        .then((todo : any) => {
+        .then((todo : mongoose.Document) => {
             response.status(200).json({
                 success : true,
             });
         })
         .catch((error : any)=> {
             response.status(400).json({
-                success : false,
+                error
             });
         })
+});
+
+routes.route('/:id').put((request : express.Request, response : express.Response) => {
+    const id = request.params.id;
+
+    TodoModel.findById(id, (error : any, todo : mongoose.Document) => {
+        if(typeof todo === 'undefined') {
+            response.status(404).send(`The specified todo item with ID ${id} was not found in the database.`);
+        } else {
+            Object.assign(todo, request.body);
+
+            todo.save().then(todo => {
+                response.json(todo);
+            })
+            .catch((error : any )=> {
+                response.status(400).json({
+                    error
+                });
+            });
+        }
+    });
+});
+
+routes.route('/:id').delete((request : express.Request, response : express.Response) => {
+    const id = request.params.id;
+
+    TodoModel.findById(id, (error : any, todo : mongoose.Document) => {
+        if(typeof todo === 'undefined') {
+            response.status(404).send(`The specified todo item with ID ${id} was not found in the database.`);
+        } else {
+            todo.remove().then(todo => {
+                response.json(todo);
+            })
+            .catch(err => {
+                response.status(400).send(`The request to delete the todo item with ID ${id} failed. Check that the database is running.`);
+            });
+        }
+    });
 });
 
 app.use('/todos', routes);
