@@ -51,7 +51,9 @@ class App extends Component {
 
     return (
       <div className="App">
+        <h1>Todo List ({this.state.activeCount})</h1>
         <section className="active">{activeList}</section>
+        <h2>Completed tasks ({this.state.completedCount})</h2>
         <section className="completed">{completedList}</section>
       </div>
     );
