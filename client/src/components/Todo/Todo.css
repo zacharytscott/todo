@@ -1,0 +1,44 @@
+.Todo {
+    background: white;
+    vertical-align: middle;
+    display: flex;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-shadow: 2px 3px 3px #949494;
+}
+
+.Todo button {
+    height: 24px;
+}
+
+.Todo .checkbox {
+    margin-right: 5px;
+    background: none;
+    border-radius: 50%;
+    width: 24px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.Todo .checkbox.completed {
+    background: rgb(131, 214, 163);
+    border: none;
+}
+
+.Todo .checkbox.completed::before {
+    content: "✔";
+    color: white;
+    position: relative;
+    right: 2px;
+}
+
+.Todo button.delete {
+    margin-left: auto;
+    margin-right: 10px;
+    background: url('../../assets/trash.svg');
+    color: white;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    border: none;
+}
