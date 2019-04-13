@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express from 'express';
 import * as mongoose from 'mongoose';
 import * as fs from 'fs';
 import TodoModel from './databaseModels/todoModel';
@@ -10,7 +10,7 @@ const configurationJSONPath = './config.json';
 const configuration : string = fs.readFileSync(configurationJSONPath, 'utf8');
 const configurationJSON : ConfigurationJSONInterface = JSON.parse(configuration);
 const PORT = configurationJSON.port;
-const MONGO_PORT = parseInt(configurationJSON.mongoPort);
+const MONGO_PORT = configurationJSON.mongoUrl;
 const app: express.Application = express();
 
 const dbInitializer = new DatabaseInitializer();

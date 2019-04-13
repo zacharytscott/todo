@@ -1,6 +1,6 @@
 interface configurationJSON {
     port: string,
-    mongoPort : string
+    mongoUrl : string
 }
 
 export default configurationJSON;
