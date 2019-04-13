@@ -72,7 +72,7 @@ routes.route('/:id').delete((request : express.Request, response : express.Respo
             todo.remove().then(result => {
                 response.json(result);
             })
-            .catch(err => {
+            .catch(error => {
                 response.status(400).json({error});
             });
         }
