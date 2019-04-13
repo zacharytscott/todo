@@ -1,22 +1,17 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as bodyParser from 'body-parser';
-import fs from 'fs';
+import * as fs from 'fs';
 import TodoModel from './models/todoModel';
-import configurationJSONInterface from '.models/configurationJSONInterface';
+import ConfigurationJSONInterface from './models/ConfigurationJSONInterface';
+import DeleteFilter from './models/DeleteFilter';
 
-//TODO: move these to config json file
-
-interface configurationJSON {
-    port: string,
-    mongoPort : string
-}
-
+console.log(process.cwd());
 const configurationJSONPath = './config.json';
 const configuration : string = fs.readFileSync(configurationJSONPath, 'utf8');
-const configurationJSON : configurationJSONInterface = JSON.parse(configuration);
+const configurationJSON : ConfigurationJSONInterface = JSON.parse(configuration);
 const PORT = configurationJSON.port;
-const MONGO_PORT = '27017';
+const MONGO_PORT = configurationJSON.mongoPort;
 const app: express.Application = express();
 
 app.use(bodyParser.json());
@@ -74,9 +69,7 @@ routes.route('/:id').put((request : express.Request, response : express.Response
                 response.json(todo);
             })
             .catch((error : any )=> {
-                response.status(400).json({
-                    error
-                });
+                response.status(400).json({error});
             });
         }
     });
@@ -89,14 +82,31 @@ routes.route('/:id').delete((request : express.Request, response : express.Respo
         if(typeof todo === 'undefined') {
             response.status(404).send(`The specified todo item with ID ${id} was not found in the database.`);
         } else {
-            todo.remove().then(todo => {
-                response.json(todo);
+            todo.remove().then(result => {
+                response.json(result);
             })
             .catch(err => {
                 response.status(400).send(`The request to delete the todo item with ID ${id} failed. Check that the database is running.`);
             });
         }
     });
+});
+
+routes.route('/').delete((request : express.Request, response : express.Response) => {
+    
+    const filter : DeleteFilter = {};
+
+    if(request.query && request.query.hasOwnProperty('completed')) {
+        filter.completed = request.query.completed;
+    }
+
+    TodoModel.remove(filter).then(result  => {
+        response.json(result);
+    })
+    .catch(error => {
+        response.status(400).json({error});
+    })
+
 });
 
 app.use('/todos', routes);
