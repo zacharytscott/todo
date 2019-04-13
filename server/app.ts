@@ -6,7 +6,6 @@ import TodoModel from './models/todoModel';
 import ConfigurationJSONInterface from './models/ConfigurationJSONInterface';
 import DeleteFilter from './models/DeleteFilter';
 
-console.log(process.cwd());
 const configurationJSONPath = './config.json';
 const configuration : string = fs.readFileSync(configurationJSONPath, 'utf8');
 const configurationJSON : ConfigurationJSONInterface = JSON.parse(configuration);
@@ -21,7 +20,7 @@ mongoose.connect(`mongodb://127.0.0.1:${MONGO_PORT}/todos`, { useNewUrlParser: t
 const connection = mongoose.connection;
 
 connection.once('open', () => {
-    console.log("MongoDB database connection established successfully");
+    console.log("MongoDB database connection established successfully!");
 });
 
 const routes = express.Router();
@@ -43,17 +42,12 @@ routes.route('/:id').get((request : express.Request, response : express.Response
 routes.route('/').post((request : express.Request, response : express.Response) => {
     const todo = new TodoModel(request.body);
 
-    todo.save()
-        .then((todo : mongoose.Document) => {
-            response.status(200).json({
-                success : true,
-            });
-        })
-        .catch((error : any)=> {
-            response.status(400).json({
-                error
-            });
-        })
+    todo.save().then((todo : mongoose.Document) => {
+        response.status(200).json({todo});
+    })
+    .catch((error : any) => {
+        response.status(400).json({error});
+    })
 });
 
 routes.route('/:id').put((request : express.Request, response : express.Response) => {
@@ -86,7 +80,7 @@ routes.route('/:id').delete((request : express.Request, response : express.Respo
                 response.json(result);
             })
             .catch(err => {
-                response.status(400).send(`The request to delete the todo item with ID ${id} failed. Check that the database is running.`);
+                response.status(400).json({error});
             });
         }
     });
@@ -100,13 +94,12 @@ routes.route('/').delete((request : express.Request, response : express.Response
         filter.completed = request.query.completed;
     }
 
-    TodoModel.remove(filter).then(result  => {
+    TodoModel.deleteMany(filter).then(result  => {
         response.json(result);
     })
     .catch(error => {
         response.status(400).json({error});
     })
-
 });
 
 app.use('/todos', routes);
