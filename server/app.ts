@@ -1,10 +1,21 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as bodyParser from 'body-parser';
+import fs from 'fs';
 import TodoModel from './models/todoModel';
+import configurationJSONInterface from '.models/configurationJSONInterface';
 
 //TODO: move these to config json file
-const PORT = '3000';
+
+interface configurationJSON {
+    port: string,
+    mongoPort : string
+}
+
+const configurationJSONPath = './config.json';
+const configuration : string = fs.readFileSync(configurationJSONPath, 'utf8');
+const configurationJSON : configurationJSONInterface = JSON.parse(configuration);
+const PORT = configurationJSON.port;
 const MONGO_PORT = '27017';
 const app: express.Application = express();
 
