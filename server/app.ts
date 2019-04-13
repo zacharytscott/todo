@@ -1,10 +1,12 @@
 import express from 'express';
-import * as mongoose from 'mongoose';
-import * as fs from 'fs';
+import mongoose from 'mongoose';
+import fs from 'fs';
+import bodyParser from 'body-parser';
+import cors from 'cors';
 import TodoModel from './databaseModels/todoModel';
-import ConfigurationJSONInterface from './interfaces/ConfigurationJSONInterface';
-import DeleteFilter from './interfaces/DeleteFilter';
-import DatabaseInitializer from './classes/databaseInitializer'
+import ConfigurationJSONInterface from './types/ConfigurationJSONInterface';
+import DeleteFilter from './types/DeleteFilter';
+import DatabaseInitializer from './types/databaseInitializer'
 
 const configurationJSONPath = './config.json';
 const configuration : string = fs.readFileSync(configurationJSONPath, 'utf8');
@@ -14,7 +16,10 @@ const MONGO_PORT = configurationJSON.mongoUrl;
 const app: express.Application = express();
 
 const dbInitializer = new DatabaseInitializer();
-dbInitializer.initialize(app, MONGO_PORT);
+dbInitializer.initialize(MONGO_PORT);
+
+app.use(bodyParser.json());
+app.use(cors());
 
 const routes = express.Router();
 

@@ -1,11 +1,7 @@
-import * as mongoose from 'mongoose';
-import * as bodyParser from 'body-parser';
-import * as express from 'express';
+import mongoose from 'mongoose';
 
 class DatabaseInitializer {
-    initialize(app : express.Application, mongoUrl : string) {
-        app.use(bodyParser.json());
-
+    initialize(mongoUrl : string) {
         mongoose.connect(mongoUrl, { useNewUrlParser: true });
 
         const connection = mongoose.connection;
