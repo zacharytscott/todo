@@ -1,27 +1,20 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
-import * as bodyParser from 'body-parser';
 import * as fs from 'fs';
-import TodoModel from './models/todoModel';
-import ConfigurationJSONInterface from './models/ConfigurationJSONInterface';
-import DeleteFilter from './models/DeleteFilter';
+import TodoModel from './databaseModels/todoModel';
+import ConfigurationJSONInterface from './interfaces/ConfigurationJSONInterface';
+import DeleteFilter from './interfaces/DeleteFilter';
+import DatabaseInitializer from './classes/databaseInitializer'
 
 const configurationJSONPath = './config.json';
 const configuration : string = fs.readFileSync(configurationJSONPath, 'utf8');
 const configurationJSON : ConfigurationJSONInterface = JSON.parse(configuration);
 const PORT = configurationJSON.port;
-const MONGO_PORT = configurationJSON.mongoPort;
+const MONGO_PORT = parseInt(configurationJSON.mongoPort);
 const app: express.Application = express();
 
-app.use(bodyParser.json());
-
-mongoose.connect(`mongodb://127.0.0.1:${MONGO_PORT}/todos`, { useNewUrlParser: true });
-
-const connection = mongoose.connection;
-
-connection.once('open', () => {
-    console.log("MongoDB database connection established successfully!");
-});
+const dbInitializer = new DatabaseInitializer();
+dbInitializer.initialize(app, MONGO_PORT);
 
 const routes = express.Router();
 
@@ -87,7 +80,6 @@ routes.route('/:id').delete((request : express.Request, response : express.Respo
 });
 
 routes.route('/').delete((request : express.Request, response : express.Response) => {
-    
     const filter : DeleteFilter = {};
 
     if(request.query && request.query.hasOwnProperty('completed')) {
