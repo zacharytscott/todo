@@ -1,4 +1,5 @@
 import React from 'react';
+import './Todo.css';
 
 const todo = props => {
     let buttonClass = '';
@@ -10,9 +11,9 @@ const todo = props => {
     }
 
     return (
-        <div>
+        <div className="Todo">
             <button className={buttonClass} type="button" aria-label={ariaLabel}></button>
-            {props.text}
+            <div className="text">{props.text}</div>
             <button className="delete"></button>
         </div>
     )

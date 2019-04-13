@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
 import Todo from './components/Todo.js';
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +42,7 @@ class App extends Component {
       return (
         <Todo key={item._id} active={active} text={item.text}/>
       )
-    })
+    });
   }
 
   render() {
@@ -51,7 +50,7 @@ class App extends Component {
     const completedList = this.buildTodoList(this.state.completedList, false);
 
     return (
-      <div>
+      <div className="App">
         <section className="active">{activeList}</section>
         <section className="completed">{completedList}</section>
       </div>

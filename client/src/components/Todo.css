@@ -1,0 +1,20 @@
+.Todo {
+    width : 60%;
+    background : white;
+    margin-left : auto;
+    margin-right : auto;
+    vertical-align: middle;
+    display : flex;
+}
+
+.Todo > * {
+    display : inline-block;
+}
+
+.Todo button {
+    height : 24px;
+}
+
+.Todo button.delete {
+    margin-left : auto;
+}
