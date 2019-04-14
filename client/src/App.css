@@ -10,12 +10,18 @@
 .App h1,
 .App h2 {
   font-family: 'Raleway', sans-serif;
-  margin-bottom: 5px;
-  color: white;
+  margin-bottom: 10px;
   margin-top: 0px;
   padding-top: 25px;
 }
 
 .empty-text {
   text-align: center;
+}
+
+@media (max-width: 381px) {
+  .App h1,
+  .App h2 {
+    font-size: 1.7rem;
+  }
 }

@@ -36,7 +36,7 @@ class App extends Component {
     this.setState({todoList, activeList, activeCount, completedList, completedCount});
   }
 
-  toggleTask(item) {
+  toggleTaskHandler(item) {
     const newItem = {
       text : item.text,
       completed : !item.completed
@@ -68,18 +68,6 @@ class App extends Component {
       .catch(error => {
         console.log('error!');
       });
-  }
-
-  buildTodoList(todoList, active) {
-    if(todoList.length > 0) {
-      return todoList.map(item => {
-        return (
-          <Todo key={item._id} active={active} text={item.text} toggleTask={this.toggleTask.bind(this, item)}/>
-        )
-      });
-    } else {
-      return <div className="empty-text">There are no tasks here!</div>
-    }
   }
 
   addTaskChangeHandler(event) {
@@ -119,13 +107,46 @@ class App extends Component {
       });
   }
 
+  deleteTaskHandler(item) {
+    axios.delete(`${TODO_ENDPOINT}/${item._id}`)
+      .then(response => {
+        let newList = [...this.state.todoList];
+
+        newList = newList.filter(task => task._id !== item._id);
+        this.updateLists(newList);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  buildTodoList(todoList, active) {
+    return todoList.map(item => {
+      return (
+        <Todo 
+          key={item._id}
+          active={active}
+          text={item.text}
+          toggleTaskHandler={this.toggleTaskHandler.bind(this, item)}
+          deleteTaskHandler={this.deleteTaskHandler.bind(this, item)}
+        />
+      )
+    });
+  }
+
   render() {
     const activeList = this.buildTodoList(this.state.activeList, true);
     const completedList = this.buildTodoList(this.state.completedList, false);
 
+    let allCompleteMessage = null;
+    
+    if(this.state.completedCount === 0) {
+      allCompleteMessage = <p>You don't have any completed tasks. Don't worry, you'll get there!</p>;
+    }
+
     return (
       <div className="App">
-        <h1>Todo List ({this.state.activeCount})</h1>
+        <h1>Active Tasks ({this.state.activeCount})</h1>
         <section className="active">{activeList}</section>
         <AddTodo 
           value={this.state.addTaskInputValue}
@@ -135,6 +156,7 @@ class App extends Component {
         />
         <h1>Completed tasks ({this.state.completedCount})</h1>
         <section className="completed">{completedList}</section>
+        {allCompleteMessage}
       </div>
     );
   }

@@ -12,9 +12,22 @@ const todo = props => {
 
     return (
         <div className="Todo">
-            <button className={buttonClass} type="button" title={title} aria-label={title} onClick={props.toggleTask}></button>
+            <button 
+                className={buttonClass}
+                type="button"
+                title={title}
+                aria-label={title}
+                onClick={props.toggleTaskHandler}>
+            </button>
+
             <div className="text">{props.text}</div>
-            <button className="delete" type="button" title="Delete this task" aria-label="Delete this task"></button>
+            <button 
+                className="delete"
+                type="button"
+                title="Delete this task"
+                aria-label="Delete this task"
+                onClick={props.deleteTaskHandler}>
+            </button>
         </div>
     )
 };
