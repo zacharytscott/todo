@@ -40,8 +40,15 @@ routes.route('/:id').get((request : express.Request, response : express.Response
 routes.route('/').post((request : express.Request, response : express.Response) => {
     const todo = new TodoModel(request.body);
 
-    todo.save().then((todo : mongoose.Document) => {
-        response.status(200).json({...todo});
+    todo.save().then((todo : any) => {
+        const newTodo = {
+            _id : todo._id,
+            text : todo.text,
+            completed : false,
+            __v : todo.__v
+        };
+
+        response.status(200).json(newTodo);
     })
     .catch((error : any) => {
         response.status(400).json({error});
