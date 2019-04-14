@@ -8,15 +8,19 @@
     color: #363636;
 }
 
+.Todo .text {
+    line-height: 1.8;
+}
+
 .Todo button {
-    height: 24px;
+    height: 30px;
 }
 
 .Todo .checkbox {
     margin-right: 5px;
     background: none;
     border-radius: 50%;
-    width: 24px;
+    min-width: 30px;
     border: 1px solid #ccc;
     cursor: pointer;
 }
@@ -30,19 +34,20 @@
     content: "✔";
     color: white;
     position: relative;
-    right: 2px;
+    right: 1px;
+    font-size: 1.3rem;
 }
 
 .Todo button.delete {
     margin-left: auto;
-    margin-right: 10px;
+    margin-right: 2px;
     background: url('../../assets/trash.svg');
     color: white;
-    background-size: contain;
     background-repeat: no-repeat;
     background-position-y: center;
     border: none;
     cursor: pointer;
+    width: 30px;
 }
 
 .Todo button.delete:hover,

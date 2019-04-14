@@ -19,24 +19,18 @@
     color : white;
     border: none;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     margin-right: 5px;
     pointer-events: none;
     transition-duration: 400ms;
+    font-size: 1.75rem;
+    text-align: center;
+    line-height: .9;
 }
 
 .AddTodo button.active {
     background: rgb(83, 175, 83);
     cursor: pointer;
     pointer-events: auto;
-}
-
-.AddTodo button::before {
-    content: "+";
-    color: white;
-    position: relative;
-    font-size: 1.5rem;
-    bottom: 4px;
-    right: 4px;
 }

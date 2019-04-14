@@ -18,7 +18,7 @@ const todoList = props => {
     
       return (
           <div className="TodoList">
-            <h1>{props.title} ({props.list.length})</h1>
+            <h1>{props.title} <span class="task-count">({props.list.length})</span></h1>
             <section className={props.active ? "active" : "completed"}>
                 <ReactCSSTransitionGroup
                     transitionName="taskTransition"

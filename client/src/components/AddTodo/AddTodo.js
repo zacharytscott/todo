@@ -10,8 +10,8 @@ const addTodo = props => {
 
     return (
         <div className="AddTodo">
-            <input value={props.value} type="text" onChange={props.addTaskChangeHandler}></input>
-            <button className={className} type="button" onClick={props.addTaskClickHandler}></button>
+            <input value={props.value} type="text" onChange={props.addTaskChangeHandler} placeholder="Enter a new task"></input>
+            <button className={className} type="button" onClick={props.addTaskClickHandler}>+</button>
         </div>
     )
 };
