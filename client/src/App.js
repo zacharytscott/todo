@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; 
 import axios from 'axios';
 import './App.css';
 import Todo from './components/Todo/Todo.js';
@@ -180,18 +181,37 @@ class App extends Component {
 
     return (
       <div className="App">
+
         <h1>Active Tasks ({this.state.activeCount})</h1>
-        <section className="active">{activeList}</section>
+        <section className="active">
+          <ReactCSSTransitionGroup
+            transitionName="taskTransition"
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={300}>
+            {activeList}
+          </ReactCSSTransitionGroup>
+        </section>
+
         <AddTodo 
           value={this.state.addTaskInputValue}
           buttonState={this.state.addTaskButtonActive} 
           addTaskChangeHandler={(event) => this.addTaskChangeHandler(event)}
           addTaskClickHandler={this.postNewTask.bind(this)}
         />
+
         <h1>Completed tasks ({this.state.completedCount})</h1>
-        <section className="completed">{completedList}</section>
+        <section className="completed">
+          <ReactCSSTransitionGroup
+            transitionName="taskTransition"
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={300}>
+            {completedList}
+          </ReactCSSTransitionGroup>
+        </section>
+
         {clearCompletedButton}
         {allCompleteMessage}
+
         <ConfirmationDialog 
           visible={this.state.clearCompletedTaskConfirmationVisible}
           yesClickHandler={this.deleteAllCompletedTasks.bind(this)}

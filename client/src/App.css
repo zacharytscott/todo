@@ -23,6 +23,7 @@
   font-size: 1rem;
   cursor: pointer;
   float: right;
+  width: 250px;
 }
 
 .App #clearCompleted:hover {
@@ -40,4 +41,22 @@
   .App #clearCompleted {
     width: 100%;
   }
+}
+
+.taskTransition-enter {
+  transform: translate(-120%);
+}
+
+.taskTransition-enter.taskTransition-enter-active {
+  transform: translate(0%);
+  transition: transform 500ms ease-in;
+}
+
+.taskTransition-leave {
+  transform: translate(0%);
+}
+
+.taskTransition-leave.taskTransition-leave-active {
+  transform: translate(-120%);
+  transition: transform 500ms ease-in;
 }
