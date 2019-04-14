@@ -218,7 +218,7 @@ class App extends Component {
     }
 
     return (
-      <div className="App">
+      <main className="App">
 
         <TabSelector 
           selectedTab={this.state.selectedTab}
@@ -231,7 +231,7 @@ class App extends Component {
         {activeTaskContent}
 
         {completedTaskContent}
-      </div>
+      </main>
     );
   }
 }
