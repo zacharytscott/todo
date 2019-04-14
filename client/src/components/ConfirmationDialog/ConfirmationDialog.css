@@ -16,7 +16,7 @@
 }
 
 .ConfirmationDialog.active {
-    bottom: 2px;
+    bottom: 0px;
 }
 
 .ConfirmationDialog button {

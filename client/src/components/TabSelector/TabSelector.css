@@ -44,3 +44,10 @@
         width: 100px;
     }
 }
+
+@media(max-width: 320px) {
+    .TabSelector button {
+        width: 75px;
+        font-size: .75rem;
+    }
+}
