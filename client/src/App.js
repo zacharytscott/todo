@@ -23,7 +23,7 @@ class App extends Component {
     }
   }
 
-  updateLists(todoList) {
+  updateLists = todoList => {
     const completedList = [];
     const activeList = [];
 
@@ -40,7 +40,7 @@ class App extends Component {
     this.setState({todoList, activeList, activeCount, completedList, completedCount});
   }
 
-  toggleTaskHandler = (item) => {
+  toggleTaskHandler = item => {
     const newItem = {
       text : item.text,
       completed : !item.completed
@@ -74,13 +74,13 @@ class App extends Component {
       });
   }
 
-  addTaskChangeHandler(event) {
+  addTaskChangeHandler = event => {
     const addTaskInputValue = event.target.value;
     const addTaskButtonActive = event.target.value !== "";
     this.setState({addTaskInputValue, addTaskButtonActive});
   }
 
-  postNewTask() {
+  postNewTask = () => {
     const addTaskInputValue = this.state.addTaskInputValue;
 
     const newTask = {
@@ -111,7 +111,7 @@ class App extends Component {
       });
   }
 
-  deleteTaskHandler = (item) => {
+  deleteTaskHandler = item => {
     axios.delete(`${TODO_ENDPOINT}/${item._id}`)
       .then(response => {
         let newList = [...this.state.todoList];
@@ -124,27 +124,27 @@ class App extends Component {
       });
   }
 
-  showClearCompletedConfirmationDialog() {
+  showClearCompletedConfirmationDialog = () => {
     this.setState({clearCompletedTaskConfirmationVisible : true});
   }
 
-  hideClearCompletedConfirmationDialog() {
+  hideClearCompletedConfirmationDialog = () =>{
     this.setState({clearCompletedTaskConfirmationVisible : false});
   }
 
-  selectAllTab() {
+  selectAllTab = () => {
     this.setState({selectedTab : 'all'});
   }
 
-  selectActiveTab() {
+  selectActiveTab = () => {
     this.setState({selectedTab : 'active'});
   }
 
-  selectCompletedTab() {
+  selectCompletedTab = () => {
     this.setState({selectedTab : 'completed'});
   }
 
-  deleteAllCompletedTasks() {
+  deleteAllCompletedTasks = () => {
     this.hideClearCompletedConfirmationDialog();
 
     axios.delete(`${TODO_ENDPOINT}?completed=true`)
@@ -166,52 +166,69 @@ class App extends Component {
       noCompletedMessage = <p>You don't have any completed tasks. Don't worry, you'll get there!</p>;
     }
 
-    return (
-      <div className="App">
+    let activeTaskContent = null;
+    let completedTaskContent = null;
 
-        <TabSelector 
-          selectedTab={this.state.selectedTab}
-          selectAllTabHandler={this.selectAllTab.bind(this)}
-          selectActiveTabHandler={this.selectActiveTab.bind(this)}
-          selectCompletedTabHandler={this.selectCompletedTab.bind(this)}
-        />
+    if(this.state.selectedTab === 'all' || this.state.selectedTab === 'active') {
+      activeTaskContent = <div>
+  
+      <TodoList 
+        list={this.state.activeList}
+        active={true}
+        title="Active Tasks"
+        toggleTaskHandler={this.toggleTaskHandler}
+        deleteTaskHandler={this.deleteTaskHandler}
+      />
 
-        <TodoList 
-          list={this.state.activeList}
-          active={true}
-          title="Active Tasks"
-          toggleTaskHandler={this.toggleTaskHandler}
-          deleteTaskHandler={this.deleteTaskHandler}
-        />
-
-        <AddTodo 
+      <AddTodo 
           value={this.state.addTaskInputValue}
           buttonState={this.state.addTaskButtonActive}
           addTaskChangeHandler={(event) => this.addTaskChangeHandler(event)}
-          addTaskClickHandler={this.postNewTask.bind(this)}
+          addTaskClickHandler={this.postNewTask}
         />
+      </div>
+    }
 
-        <TodoList 
-          list={this.state.completedList}
-          active={false}
-          title="Completed Tasks"
-          toggleTaskHandler={this.toggleTaskHandler}
-          deleteTaskHandler={this.deleteTaskHandler}
-        />
+    if(this.state.selectedTab === 'all' || this.state.selectedTab === 'completed') {
+      completedTaskContent = <div>
+      
+      <TodoList 
+        list={this.state.completedList}
+        active={false}
+        title="Completed Tasks"
+        toggleTaskHandler={this.toggleTaskHandler}
+        deleteTaskHandler={this.deleteTaskHandler}
+      />
 
-        {noCompletedMessage}
+      {noCompletedMessage}
 
         <button 
           id="clearCompleted"
           className={this.state.completedCount === 0 ? null : "active"}
-          onClick={this.showClearCompletedConfirmationDialog.bind(this)}>
+          onClick={this.showClearCompletedConfirmationDialog}>
             Clear all completed tasks
         </button>
 
         <ConfirmationDialog 
           visible={this.state.clearCompletedTaskConfirmationVisible}
-          yesClickHandler={this.deleteAllCompletedTasks.bind(this)}
-          cancelClickHandler={this.hideClearCompletedConfirmationDialog.bind(this)}/>
+          yesClickHandler={this.deleteAllCompletedTasks}
+          cancelClickHandler={this.hideClearCompletedConfirmationDialog}/>
+      </div>
+    }
+
+    return (
+      <div className="App">
+
+        <TabSelector 
+          selectedTab={this.state.selectedTab}
+          selectAllTabHandler={this.selectAllTab}
+          selectActiveTabHandler={this.selectActiveTab}
+          selectCompletedTabHandler={this.selectCompletedTab}
+        />
+
+        {activeTaskContent}
+
+        {completedTaskContent}
       </div>
     );
   }
