@@ -4,7 +4,7 @@
   "description": "A simple todo app",
   "main": "app.js",
   "scripts": {
-    "build": "npx tsc ./app.ts",
+    "build": "npx tsc",
     "start": "node ./app.js"
   },
   "repository": {
