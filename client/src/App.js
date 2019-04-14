@@ -3,6 +3,7 @@ import axios from 'axios';
 import './App.css';
 import Todo from './components/Todo/Todo.js';
 import AddTodo from './components/AddTodo/AddTodo';
+import ConfirmationDialog from './components/ConfirmationDialog/ConfirmationDialog';
 
 const TODO_ENDPOINT = 'http://localhost:3001/todos';
 class App extends Component {
@@ -15,7 +16,8 @@ class App extends Component {
       completedList : [],
       completedCount : null,
       addTaskButtonActive : false,
-      addTaskInputValue : ""
+      addTaskInputValue : "",
+      clearCompletedTaskConfirmationVisible: false
     }
   }
 
@@ -134,14 +136,46 @@ class App extends Component {
     });
   }
 
+  showClearCompletedConfirmationDialog() {
+    this.setState({clearCompletedTaskConfirmationVisible : true});
+  }
+
+  hideClearCompletedConfirmationDialog() {
+    this.setState({clearCompletedTaskConfirmationVisible : false});
+  }
+
+  deleteAllCompletedTasks() {
+    this.hideClearCompletedConfirmationDialog();
+
+    axios.delete(`${TODO_ENDPOINT}?completed=true`)
+      .then(response => {
+        let newList = [...this.state.todoList];
+
+        newList = newList.filter(task => !task.completed);
+        this.updateLists(newList);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   render() {
     const activeList = this.buildTodoList(this.state.activeList, true);
     const completedList = this.buildTodoList(this.state.completedList, false);
 
     let allCompleteMessage = null;
+    let clearCompletedButton = null;
     
     if(this.state.completedCount === 0) {
       allCompleteMessage = <p>You don't have any completed tasks. Don't worry, you'll get there!</p>;
+    } else {
+      clearCompletedButton = (
+        <button 
+          id="clearCompleted"
+          onClick={this.showClearCompletedConfirmationDialog.bind(this)}>
+            Clear all completed tasks
+        </button>
+      );
     }
 
     return (
@@ -156,7 +190,12 @@ class App extends Component {
         />
         <h1>Completed tasks ({this.state.completedCount})</h1>
         <section className="completed">{completedList}</section>
+        {clearCompletedButton}
         {allCompleteMessage}
+        <ConfirmationDialog 
+          visible={this.state.clearCompletedTaskConfirmationVisible}
+          yesClickHandler={this.deleteAllCompletedTasks.bind(this)}
+          cancelClickHandler={this.hideClearCompletedConfirmationDialog.bind(this)}/>
       </div>
     );
   }

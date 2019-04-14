@@ -1,0 +1,63 @@
+.ConfirmationDialog {
+    color: #363636;
+    position: fixed;
+    background: #eee;
+    left: 0px;
+    right: 0px;
+    bottom: -200px;
+    display: flex;
+    padding: 0px 10px;
+    padding-top: 0px;
+    width: 100%;
+    box-shadow: -4px 0px 6px #707070;
+    transition-duration: 300ms;
+    align-items: center;
+    padding: 10px;
+}
+
+.ConfirmationDialog.active {
+    bottom: 2px;
+}
+
+.ConfirmationDialog button {
+    width: 100px;
+    height: 50px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.ConfirmationDialog button.yes {
+    margin-left: auto;
+    background: indianred;
+    margin-right: 10px;
+}
+
+.ConfirmationDialog button.yes:hover {
+    background: #d96b6b;
+}
+
+.ConfirmationDialog button.cancel {
+    margin-right: 25px;
+    background: rgb(193, 193, 193);
+}
+
+.ConfirmationDialog button.cancel:hover {
+    background: rgb(210, 210, 210)
+}
+
+@media(max-width: 650px) {
+    .ConfirmationDialog {
+        flex-direction: column;
+        align-items: auto;
+    }
+
+    .ConfirmationDialog button.yes,
+    .ConfirmationDialog button.cancel {
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
