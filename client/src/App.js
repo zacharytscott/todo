@@ -4,9 +4,11 @@ import './App.css';
 import AddTodo from './components/AddTodo/AddTodo';
 import ConfirmationDialog from './components/ConfirmationDialog/ConfirmationDialog';
 import TabSelector from './components/TabSelector/TabSelector';
-import TodoList from './components/TodoList/TodoList'
+import TodoList from './components/TodoList/TodoList';
+import configJSON from './config';
 
-const TODO_ENDPOINT = 'http://localhost:3001/todos';
+const TODO_ENDPOINT = `${configJSON.serverURL}/todos`;
+
 class App extends Component {
   constructor(props) {
     super(props);
