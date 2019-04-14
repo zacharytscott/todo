@@ -38,6 +38,7 @@
     cursor: pointer;
     pointer-events: auto;
     filter: grayscale(0%);
+    filter: brightness(100%);
 }
 
 .AddTodo button.active:hover,

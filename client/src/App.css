@@ -33,7 +33,9 @@
   opacity: 1;
 }
 
-.App #clearCompleted.active:hover {
+.App #clearCompleted.active:hover,
+.App #clearCompleted.active:focus,
+.App #clearCompleted.active:active{
   background: #d96b6b;
 }
 
