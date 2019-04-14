@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; 
 import axios from 'axios';
 import './App.css';
-import Todo from './components/Todo/Todo.js';
 import AddTodo from './components/AddTodo/AddTodo';
 import ConfirmationDialog from './components/ConfirmationDialog/ConfirmationDialog';
 import TabSelector from './components/TabSelector/TabSelector';
+import TodoList from './components/TodoList/TodoList'
 
 const TODO_ENDPOINT = 'http://localhost:3001/todos';
 class App extends Component {
@@ -41,7 +40,7 @@ class App extends Component {
     this.setState({todoList, activeList, activeCount, completedList, completedCount});
   }
 
-  toggleTaskHandler(item) {
+  toggleTaskHandler = (item) => {
     const newItem = {
       text : item.text,
       completed : !item.completed
@@ -112,7 +111,7 @@ class App extends Component {
       });
   }
 
-  deleteTaskHandler(item) {
+  deleteTaskHandler = (item) => {
     axios.delete(`${TODO_ENDPOINT}/${item._id}`)
       .then(response => {
         let newList = [...this.state.todoList];
@@ -123,20 +122,6 @@ class App extends Component {
       .catch(error => {
         console.log(error);
       });
-  }
-
-  buildTodoList(todoList, active) {
-    return todoList.map(item => {
-      return (
-        <Todo 
-          key={item._id}
-          active={active}
-          text={item.text}
-          toggleTaskHandler={this.toggleTaskHandler.bind(this, item)}
-          deleteTaskHandler={this.deleteTaskHandler.bind(this, item)}
-        />
-      )
-    });
   }
 
   showClearCompletedConfirmationDialog() {
@@ -175,9 +160,6 @@ class App extends Component {
   }
 
   render() {
-    const activeList = this.buildTodoList(this.state.activeList, true);
-    const completedList = this.buildTodoList(this.state.completedList, false);
-
     let noCompletedMessage = null;
     
     if(this.state.completedCount === 0) {
@@ -194,32 +176,28 @@ class App extends Component {
           selectCompletedTabHandler={this.selectCompletedTab.bind(this)}
         />
 
-        <h1>Active Tasks ({this.state.activeCount})</h1>
-        <section className="active">
-          <ReactCSSTransitionGroup
-            transitionName="taskTransition"
-            transitionEnterTimeout={500}
-            transitionLeaveTimeout={300}>
-            {activeList}
-          </ReactCSSTransitionGroup>
-        </section>
+        <TodoList 
+          list={this.state.activeList}
+          active={true}
+          title="Active Tasks"
+          toggleTaskHandler={this.toggleTaskHandler}
+          deleteTaskHandler={this.deleteTaskHandler}
+        />
 
         <AddTodo 
           value={this.state.addTaskInputValue}
-          buttonState={this.state.addTaskButtonActive} 
+          buttonState={this.state.addTaskButtonActive}
           addTaskChangeHandler={(event) => this.addTaskChangeHandler(event)}
           addTaskClickHandler={this.postNewTask.bind(this)}
         />
 
-        <h1>Completed tasks ({this.state.completedCount})</h1>
-        <section className="completed">
-          <ReactCSSTransitionGroup
-            transitionName="taskTransition"
-            transitionEnterTimeout={500}
-            transitionLeaveTimeout={300}>
-            {completedList}
-          </ReactCSSTransitionGroup>
-        </section>
+        <TodoList 
+          list={this.state.completedList}
+          active={false}
+          title="Completed Tasks"
+          toggleTaskHandler={this.toggleTaskHandler}
+          deleteTaskHandler={this.deleteTaskHandler}
+        />
 
         {noCompletedMessage}
 

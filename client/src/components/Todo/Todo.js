@@ -17,7 +17,7 @@ const todo = props => {
                 type="button"
                 title={title}
                 aria-label={title}
-                onClick={props.toggleTaskHandler}>
+                onClick={() => props.toggleTaskHandler(props.item)}>
             </button>
 
             <div className="text">{props.text}</div>
@@ -26,7 +26,7 @@ const todo = props => {
                 type="button"
                 title="Delete this task"
                 aria-label="Delete this task"
-                onClick={props.deleteTaskHandler}>
+                onClick={() => props.deleteTaskHandler(props.item)}>
             </button>
         </div>
     )
