@@ -41,7 +41,7 @@ routes.route('/').post((request : express.Request, response : express.Response) 
     const todo = new TodoModel(request.body);
 
     todo.save().then((todo : mongoose.Document) => {
-        response.status(200).json({todo});
+        response.status(200).json({...todo});
     })
     .catch((error : any) => {
         response.status(400).json({error});

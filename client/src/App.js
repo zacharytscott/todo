@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
 import Todo from './components/Todo/Todo.js';
+import AddTodo from './components/AddTodo/AddTodo';
 
 const TODO_ENDPOINT = 'http://localhost:3001/todos';
 class App extends Component {
@@ -12,7 +13,9 @@ class App extends Component {
       activeList : [],
       activeCount : null,
       completedList : [],
-      completedCount : null
+      completedCount : null,
+      addTaskButtonActive : false,
+      addTaskInputValue : ""
     }
   }
 
@@ -68,11 +71,52 @@ class App extends Component {
   }
 
   buildTodoList(todoList, active) {
-    return todoList.map(item => {
-      return (
-        <Todo key={item._id} active={active} text={item.text} toggleTask={this.toggleTask.bind(this, item)}/>
-      )
-    });
+    if(todoList.length > 0) {
+      return todoList.map(item => {
+        return (
+          <Todo key={item._id} active={active} text={item.text} toggleTask={this.toggleTask.bind(this, item)}/>
+        )
+      });
+    } else {
+      return <div className="empty-text">There are no tasks here!</div>
+    }
+  }
+
+  addTaskChangeHandler(event) {
+    const addTaskInputValue = event.target.value;
+    const addTaskButtonActive = event.target.value !== "";
+    this.setState({addTaskInputValue, addTaskButtonActive});
+  }
+
+  postNewTask() {
+    const addTaskInputValue = this.state.addTaskInputValue;
+
+    const newTask = {
+      text: addTaskInputValue,
+      completed: false
+    };
+
+    axios.post(TODO_ENDPOINT, JSON.stringify(newTask), {headers : {"Content-Type" : "application/json"}})
+      .then(response => {
+        const newTask = {...response.data};
+        const newList = [...this.state.todoList];
+        const newActiveList = [...this.state.activeList];
+
+        newList.push(newTask);
+        newActiveList.push(newTask);
+
+        const newState = {
+          todoList: newList,
+          activeList: newActiveList,
+          addTaskButtonActive : false,
+          addTaskInputValue : "",
+        };
+
+        this.setState(newState);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   render() {
@@ -83,7 +127,13 @@ class App extends Component {
       <div className="App">
         <h1>Todo List ({this.state.activeCount})</h1>
         <section className="active">{activeList}</section>
-        <h2>Completed tasks ({this.state.completedCount})</h2>
+        <AddTodo 
+          value={this.state.addTaskInputValue}
+          buttonState={this.state.addTaskButtonActive} 
+          addTaskChangeHandler={(event) => this.addTaskChangeHandler(event)}
+          addTaskClickHandler={this.postNewTask.bind(this)}
+        />
+        <h1>Completed tasks ({this.state.completedCount})</h1>
         <section className="completed">{completedList}</section>
       </div>
     );

@@ -1,0 +1,42 @@
+.AddTodo {
+    background: white;
+    vertical-align: middle;
+    display: flex;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-shadow: 2px 3px 3px #949494;
+}
+
+.AddTodo input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #eee;
+}
+
+.AddTodo button {
+    margin-left: 10px;
+    background: rgb(193, 193, 193);
+    color : white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+    pointer-events: none;
+    transition-duration: 400ms;
+}
+
+.AddTodo button.active {
+    background: rgb(83, 175, 83);
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.AddTodo button::before {
+    content: "+";
+    color: white;
+    position: relative;
+    font-size: 1.5rem;
+    bottom: 4px;
+    right: 4px;
+}
