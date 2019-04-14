@@ -45,7 +45,7 @@
     }
 }
 
-@media(max-width: 320px) {
+@media(max-width: 355px) {
     .TabSelector button {
         width: 75px;
         font-size: .75rem;
