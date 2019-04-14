@@ -108,6 +108,10 @@ routes.route('/').delete((request : express.Request, response : express.Response
 
 app.use('/todos', routes);
 
+app.get('/', (request : express.Request, response : express.Response) => {
+    response.send("<h1>Hi there!</h1> <p>This is the Todo App server.</p>");
+});
+
 app.listen(PORT, () => {
     console.log('The todo app has started successfully!');
 });
