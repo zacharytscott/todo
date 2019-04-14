@@ -2,6 +2,12 @@ import React from 'react';
 import './TabSelector.css';
 
 const tabSelector = props => {
+    let activeCountContent = null;
+
+    if(props.activeCount > 0) {
+        activeCountContent = <span className="activeCount">({props.activeCount})</span>;
+    }
+
     return (
         <div className="TabSelector">
             <button 
@@ -13,7 +19,7 @@ const tabSelector = props => {
             <button 
                 className={props.selectedTab === "active" ? "active" : null}
                 onClick={props.selectActiveTabHandler}>
-                Active
+                Active {activeCountContent}
             </button>
 
             <button 

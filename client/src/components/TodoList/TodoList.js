@@ -1,6 +1,6 @@
 import React from 'react';
 import Todo from '../Todo/Todo';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; 
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 const todoList = props => {
     const todoListContent = props.list.map(item => {
@@ -18,7 +18,7 @@ const todoList = props => {
     
       return (
           <div className="TodoList">
-            <h1>{props.title} <span class="task-count">({props.list.length})</span></h1>
+            <h1>{props.title}</h1>
             <section className={props.active ? "active" : "completed"}>
                 <ReactCSSTransitionGroup
                     transitionName="taskTransition"

@@ -100,6 +100,7 @@ class App extends Component {
         const newState = {
           todoList: newList,
           activeList: newActiveList,
+          activeCount: this.state.activeList.length + 1,
           addTaskButtonActive : false,
           addTaskInputValue : "",
         };
@@ -224,6 +225,7 @@ class App extends Component {
           selectAllTabHandler={this.selectAllTab}
           selectActiveTabHandler={this.selectActiveTab}
           selectCompletedTabHandler={this.selectCompletedTab}
+          activeCount={this.state.activeCount}
         />
 
         {activeTaskContent}

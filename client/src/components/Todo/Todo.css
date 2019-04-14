@@ -53,8 +53,5 @@
 .Todo button.delete:hover,
 .Todo button.delete:active,
 .Todo button.delete:focus {
-    background: url('../../assets/trash_highlight.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position-y: center;
+    filter: brightness(.8);
 }
