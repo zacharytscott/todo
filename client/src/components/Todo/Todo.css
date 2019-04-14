@@ -23,6 +23,7 @@
     min-width: 30px;
     border: 1px solid #ccc;
     cursor: pointer;
+    transition-duration: 400ms;
 }
 
 .Todo .checkbox.completed {
@@ -30,28 +31,44 @@
     border: none;
 }
 
-.Todo .checkbox.completed::before {
+.Todo .checkbox.completed:hover,
+.Todo .checkbox.completed:active,
+.Todo .checkbox.completed:focus {
+    background: rgb(167, 227, 190);
+}
+
+.Todo .checkbox:before {
     content: "✔";
     color: white;
     position: relative;
     right: 1px;
+    bottom: 1px;
     font-size: 1.3rem;
+    transition-duration: 200ms;
+}
+
+.Todo .checkbox:hover:before {
+    color: rgb(231, 231, 231);
+}
+
+.Todo .checkbox.completed:hover:before {
+    color: white;
 }
 
 .Todo button.delete {
     margin-left: auto;
     margin-right: 2px;
     background: url('../../assets/trash.svg');
-    color: white;
     background-repeat: no-repeat;
     background-position-y: center;
     border: none;
     cursor: pointer;
     width: 30px;
+    transition-duration: 200ms;
 }
 
 .Todo button.delete:hover,
 .Todo button.delete:active,
 .Todo button.delete:focus {
-    filter: brightness(.8);
+    filter: brightness(80%);
 }

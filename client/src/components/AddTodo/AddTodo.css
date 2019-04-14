@@ -11,6 +11,8 @@
     width: 100%;
     border: none;
     border-bottom: 1px solid #eee;
+    padding-left: 5px;
+    font-size: 1rem;
 }
 
 .AddTodo button {
@@ -19,18 +21,27 @@
     color : white;
     border: none;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    min-width: 30px;
+    max-width: 30px;
+    min-height: 30px;
+    max-height: 30px;
     margin-right: 5px;
     pointer-events: none;
     transition-duration: 400ms;
-    font-size: 1.75rem;
-    text-align: center;
-    line-height: .9;
+    background: url('../../assets/add.svg');
+    background-repeat: no-repeat;
+    background-position-y: center;
+    filter: grayscale(100%);
 }
 
 .AddTodo button.active {
-    background: rgb(83, 175, 83);
     cursor: pointer;
     pointer-events: auto;
+    filter: grayscale(0%);
+}
+
+.AddTodo button.active:hover,
+.AddTodo button.active:focus,
+.AddTodo button.active:active{
+    filter: brightness(105%);
 }
