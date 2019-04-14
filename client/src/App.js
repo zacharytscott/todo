@@ -5,20 +5,22 @@ import './App.css';
 import Todo from './components/Todo/Todo.js';
 import AddTodo from './components/AddTodo/AddTodo';
 import ConfirmationDialog from './components/ConfirmationDialog/ConfirmationDialog';
+import TabSelector from './components/TabSelector/TabSelector';
 
 const TODO_ENDPOINT = 'http://localhost:3001/todos';
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      todoList : [],
-      activeList : [],
-      activeCount : null,
-      completedList : [],
-      completedCount : null,
-      addTaskButtonActive : false,
-      addTaskInputValue : "",
-      clearCompletedTaskConfirmationVisible: false
+      todoList: [],
+      activeList: [],
+      activeCount: null,
+      completedList: [],
+      completedCount: null,
+      addTaskButtonActive: false,
+      addTaskInputValue: "",
+      clearCompletedTaskConfirmationVisible: false,
+      selectedTab: "all"
     }
   }
 
@@ -145,6 +147,18 @@ class App extends Component {
     this.setState({clearCompletedTaskConfirmationVisible : false});
   }
 
+  selectAllTab() {
+    this.setState({selectedTab : 'all'});
+  }
+
+  selectActiveTab() {
+    this.setState({selectedTab : 'active'});
+  }
+
+  selectCompletedTab() {
+    this.setState({selectedTab : 'completed'});
+  }
+
   deleteAllCompletedTasks() {
     this.hideClearCompletedConfirmationDialog();
 
@@ -164,23 +178,21 @@ class App extends Component {
     const activeList = this.buildTodoList(this.state.activeList, true);
     const completedList = this.buildTodoList(this.state.completedList, false);
 
-    let allCompleteMessage = null;
-    let clearCompletedButton = null;
+    let noCompletedMessage = null;
     
     if(this.state.completedCount === 0) {
-      allCompleteMessage = <p>You don't have any completed tasks. Don't worry, you'll get there!</p>;
-    } else {
-      clearCompletedButton = (
-        <button 
-          id="clearCompleted"
-          onClick={this.showClearCompletedConfirmationDialog.bind(this)}>
-            Clear all completed tasks
-        </button>
-      );
+      noCompletedMessage = <p>You don't have any completed tasks. Don't worry, you'll get there!</p>;
     }
 
     return (
       <div className="App">
+
+        <TabSelector 
+          selectedTab={this.state.selectedTab}
+          selectAllTabHandler={this.selectAllTab.bind(this)}
+          selectActiveTabHandler={this.selectActiveTab.bind(this)}
+          selectCompletedTabHandler={this.selectCompletedTab.bind(this)}
+        />
 
         <h1>Active Tasks ({this.state.activeCount})</h1>
         <section className="active">
@@ -209,8 +221,14 @@ class App extends Component {
           </ReactCSSTransitionGroup>
         </section>
 
-        {clearCompletedButton}
-        {allCompleteMessage}
+        {noCompletedMessage}
+
+        <button 
+          id="clearCompleted"
+          className={this.state.completedCount === 0 ? null : "active"}
+          onClick={this.showClearCompletedConfirmationDialog.bind(this)}>
+            Clear all completed tasks
+        </button>
 
         <ConfirmationDialog 
           visible={this.state.clearCompletedTaskConfirmationVisible}

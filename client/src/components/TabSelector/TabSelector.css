@@ -1,0 +1,46 @@
+.TabSelector {
+    background: #eee;
+    position: fixed;
+    width: 100vw;
+    left: 0px;
+    height: 40px;
+    top: 0px;
+    display: flex;
+    padding: 10px;
+    background: #4a415e;
+    align-items: center;
+}
+
+.TabSelector button {
+    width: 200px;
+    margin-left: 10px;
+    height: 40px;
+    background: none;
+    border: 1px solid white;
+    border-radius: 7px;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 300ms;
+}
+
+.TabSelector button:hover {
+    background: #949ce3;
+}
+
+.TabSelector button.active {
+    background: white;
+    color: #4a415e;
+}
+
+@media(max-width: 663px) {
+    .TabSelector button {
+        width: 150px;
+    }
+}
+
+@media(max-width: 500px) {
+    .TabSelector button {
+        width: 100px;
+    }
+}
