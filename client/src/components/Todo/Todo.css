@@ -47,11 +47,15 @@
     transition-duration: 200ms;
 }
 
-.Todo .checkbox:hover:before {
+.Todo .checkbox:hover:before,
+.Todo .checkbox:active:before,
+.Todo .checkbox:focus:before {
     color: rgb(231, 231, 231);
 }
 
-.Todo .checkbox.completed:hover:before {
+.Todo .checkbox.completed:hover:before,
+.Todo .checkbox.completed:active:before,
+.Todo .checkbox.completed:focus:before {
     color: white;
 }
 
