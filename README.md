@@ -1,4 +1,4 @@
-# Todo List ✅
+# Todo List <sup>✅</sup>
 This is a simple todo app built on the MERN stack.
 
 <div align="middle">
@@ -47,6 +47,7 @@ Congrats, you're all set! 🙌
 ## Features
 
 ### Responsive
+<div align="middle">
 <img src="https://github.com/zacharytscott/todo/blob/master/img/responsive-demo.gif" title="The Todo List app"/>
 </div>
 
