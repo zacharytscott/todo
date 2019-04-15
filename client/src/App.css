@@ -39,6 +39,19 @@
   background: #d96b6b;
 }
 
+.App .server-error {
+  text-align: center;
+  margin-top: 33vh;
+}
+
+.App .server-error h1 {
+  font-size: 5rem;
+}
+
+.App .server-error p {
+  font-size: 1.5rem;
+}
+
 .taskTransition-enter {
   transform: translate(-120%);
 }

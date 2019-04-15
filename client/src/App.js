@@ -21,7 +21,8 @@ class App extends Component {
       addTaskButtonActive: false,
       addTaskInputValue: "",
       clearCompletedTaskConfirmationVisible: false,
-      selectedTab: "all"
+      selectedTab: "all",
+      errorFetchingTodos : false
     }
   }
 
@@ -72,7 +73,8 @@ class App extends Component {
         this.updateLists(response.data);
       })
       .catch(error => {
-        console.log('error!');
+        console.log(error);
+        this.setState({errorFetchingTodos : true});
       });
   }
 
@@ -171,6 +173,7 @@ class App extends Component {
 
     let activeTaskContent = null;
     let completedTaskContent = null;
+    let mainContent = null;
 
     if(this.state.selectedTab === 'all' || this.state.selectedTab === 'active') {
       activeTaskContent = <div>
@@ -216,12 +219,11 @@ class App extends Component {
           visible={this.state.clearCompletedTaskConfirmationVisible}
           yesClickHandler={this.deleteAllCompletedTasks}
           cancelClickHandler={this.hideClearCompletedConfirmationDialog}/>
-      </div>
+      </div>;
     }
 
-    return (
-      <main className="App">
-
+    if(!this.state.errorFetchingTodos) {
+      mainContent = <div>
         <TabSelector 
           selectedTab={this.state.selectedTab}
           selectAllTabHandler={this.selectAllTab}
@@ -229,10 +231,19 @@ class App extends Component {
           selectCompletedTabHandler={this.selectCompletedTab}
           activeCount={this.state.activeCount}
         />
-
-        {activeTaskContent}
-
+        {activeTaskContent} 
         {completedTaskContent}
+      </div>;
+    } else {
+      mainContent = <div class="server-error">
+          <h1 class="server-error">Oh no!</h1>
+          <p>There was an error connecting to the server.</p>
+        </div>;
+    }
+
+    return (
+      <main className="App">
+        {mainContent}
       </main>
     );
   }
