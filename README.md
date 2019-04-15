@@ -9,6 +9,7 @@ This is a simple todo app built on the MERN stack.
 1. [How to build this app](#how-to-build-this-app)
 1. [Features](#features)
 1. [API guide](#api-guide)
+1. [Future goals](#future-goals)
 
 ## How to build this app
 ### Building and running the database
@@ -232,3 +233,13 @@ This endpoint returns JSON in the form:
 ```
 ---
 
+## Future Goals
+
+This is a simple app created for demo purposes. In the future, I'd like to:
+
+* Add actual user authentication with a log-in screen using Passport (instead of using a single collection in the database)
+* Optimize styling with a pre-processor
+* Create a docker-compose file to make deployment easier
+* Tweak transition group animations to make them smoother
+
+Hey! I could keep track of all these with this app! 🤯
