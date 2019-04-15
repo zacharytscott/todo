@@ -1,0 +1,7 @@
+FROM node:11.14.0-alpine
+RUN mkdir -p /usr/src/app/client
+WORKDIR /usr/src/app/client
+COPY client .
+RUN yarn install
+EXPOSE 3001
+CMD [ "yarn", "start"]

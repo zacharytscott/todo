@@ -6,6 +6,8 @@ class DatabaseInitializer {
 
         const connection = mongoose.connection;
 
+        console.log(`Attempting to connect to the database at ${mongoUrl}...`);
+
         connection.once('open', () => {
             console.log("MongoDB database connection established successfully!");
         });
