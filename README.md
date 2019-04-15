@@ -2,7 +2,8 @@
 This is a simple todo app built on the MERN stack.
 
 ## Table of Contents
-1.[How to build this app](#how-to-build-this-app)
+1. [How to build this app](#how-to-build-this-app)
+1. [API guide](#api-guide)
 
 ## How to build this app
 ### Building and running the database
@@ -26,11 +27,168 @@ Next, we need to build the server. Once you database is up and running, simply r
 npm install
 npm start
 ```
-You can check that the server is running by visiting http://localhost:3001 in your browser. If you want to point at a specific MongoDB instance other than the default, or if you want your server to run on a different port, you can modify the configuration file at {app root}/todo/server/config.json.
+You can check that the server is running by visiting http://localhost:3001 in your browser. If you want to point at a specific MongoDB instance other than the default, or if you want your server to run on a different port, you can modify the [server configuration file](https://github.com/zacharytscott/todo/blob/master/server/config.json).
 ### Building and running the React app
 Finally, we need to start up the React app. With the database and server running, execute the following two commands in the project's client directory:
 ```
 yarn install
 yarn start
 ```
-This will start up react and open it in your browser. **If you are runnng your server at a different url than localhost:3001, you will need to modify the configuration file at {app root}/todo/client/src/config.json to specify the server you wish to point to**.
+This will start up react and open it in your browser. **If you are runnng your server at a different url than localhost:3001, you will need to modify the [client configuration file](https://github.com/zacharytscott/todo/blob/master/client/src/config.json) to specify the server you wish to point to**.
+
+Congrats, you're all set!
+
+## API guide
+
+The Node.js server exposes a set of APIs that can be used to interact with the todo items you've created. If you use [Postman](https://www.getpostman.com/), you can also play around with the API using the [Postman collection](https://github.com/zacharytscott/todo/blob/master/todos.postman_collection.json) included in this repo.
+
+All APIs expect and return JSON data.
+
+### <span style="color:green">GET</span> all todo items
+```
+curl -X GET \
+  http://localhost:3001/todos \
+  -H 'Content-type: application/json' \
+```
+This call returns an array of todo items in the form of:
+```
+[
+    ...
+
+    {
+        "_id": "This task ID (string)",
+        "text": "The text content of the task (string)",
+        "completed": "The status of this item (boolean)",
+        "__v": 0 (number)
+    },
+
+    ...
+]
+```
+
+### <span style="color:green">GET</span> a specific item
+```
+curl -X GET \
+  http://localhost:3001/todos/{item id} \
+  -H 'Content-type: application/json' \
+```
+This call returns a single todo item in the form of:
+```
+{
+    "_id": "This task ID (string)",
+    "text": "The text content of the task (string)",
+    "completed": "The status of this item (boolean)",
+    "__v": 0 (number)
+}
+```
+
+### <span style="color:goldenrod">POST</span> a new item
+```
+curl -X POST \
+  http://localhost:3001/todos \
+  -H 'Content-type: application/json' \
+  -d '{
+	"text" : "The new task text",
+	"completed" : true
+    }'
+```
+This call accepts a single JSON object of the form:
+```
+{
+    "text" : "The new task text",
+	"completed" : true
+}
+```
+It returns a new todo item of the form:
+```
+{
+    "_id": "This task ID (string)",
+    "text": "The new task text (string)",
+    "completed": "The status of this item (boolean)",
+    "__v": 0 (number)
+}
+```
+
+### <span style="color:goldenrod">PUT</span> (modify) an item
+```
+curl -X PUT \
+  http://localhost:3001/todos/{item id} \
+  -H 'Content-type: application/json' \
+  -d '{
+	"text" : "This is the updated text",
+	"completed" : "true"
+    }'
+```
+This call accepts a single JSON object of the form:
+```
+{
+    "text" : "The new task text",
+	"completed" : true
+}
+```
+It returns the updated todo item of the form:
+```
+{
+    "_id": "This task ID (string)",
+    "text": "The updated text (string)",
+    "completed": "The status of this item (boolean)",
+    "__v": 0 (number)
+}
+```
+
+### <span style="color:indianred">DELETE</span> an item
+```
+curl -X DELETE \
+  http://localhost:3001/todos/5cb3ec9520fbfe31e051cb7f \
+```
+This endpoint returns the contents of the deleted item
+```
+{
+    "_id": "This task ID (string)",
+    "text": "The task text (string)",
+    "completed": "The status of this item (boolean)",
+    "__v": 0 (number)
+}
+```
+
+### <span style="color:indianred">DELETE</span> all items
+```
+curl -X DELETE \
+  http://localhost:3001/todos \
+```
+This endpoint returns JSON in the form:
+```
+{
+    "n": 3 (number),
+    "ok": 1 (number),
+    "deletedCount": the number of deleted items (number)
+}
+```
+
+### <span style="color:indianred">DELETE</span> all completed items
+```
+curl -X DELETE \
+  http://localhost:3001/todos?completed=true \
+```
+This endpoint returns JSON in the form:
+```
+{
+    "n": 3 (number),
+    "ok": 1 (number),
+    "deletedCount": the number of deleted items (number)
+}
+```
+
+### <span style="color:indianred">DELETE</span> all active items
+```
+curl -X DELETE \
+  http://localhost:3001/todos?completed=false \
+```
+This endpoint returns JSON in the form:
+```
+{
+    "n": 3 (number),
+    "ok": 1 (number),
+    "deletedCount": the number of deleted items (number)
+}
+```
