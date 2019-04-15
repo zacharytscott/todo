@@ -1,14 +1,14 @@
-# Todo List
+# Todo List ✅
 This is a simple todo app built on the MERN stack.
 
 <div align="middle">
-<img src="https://github.com/zacharytscott/todo/blob/master/img/main.PNG" title="The Todo List app" height="598" width="333"/>
+<img src="https://github.com/zacharytscott/todo/blob/master/img/main.PNG" title="The Todo List app" height="100%" width="100%"/>
 </div>
 
 ## Table of Contents
 1. [How to build this app](#how-to-build-this-app)
+1. [Features](#features)
 1. [API guide](#api-guide)
-1. 
 
 ## How to build this app
 ### Building and running the database
@@ -41,7 +41,22 @@ yarn start
 ```
 This will start up react and open it in your browser. **If you are runnng your server at a different url than localhost:3001, you will need to modify the [client configuration file](https://github.com/zacharytscott/todo/blob/master/client/src/config.json) to specify the server you wish to point to**.
 
-Congrats, you're all set!
+Congrats, you're all set! 🙌
+
+---
+## Features
+
+### Responsive
+<img src="https://github.com/zacharytscott/todo/blob/master/img/responsive-demo.GIF" title="The Todo List app" height="100%" width="100%"/>
+</div>
+
+The app was tested against multiple device dimensions to ensure it looks good and works on all common devices.
+
+### Accessible
+
+The plugin was run against [AXE](https://www.deque.com/axe/) to ensure it contained no major accessibility concerns. The app uses semantic HTML where possible and aria attributes for custom elements. All use cases may be performed with the keyboard, with visual feeback given for focused elements.
+
+---
 
 ## API guide
 
@@ -197,3 +212,5 @@ This endpoint returns JSON in the form:
     "deletedCount": the number of deleted items (number)
 }
 ```
+---
+
