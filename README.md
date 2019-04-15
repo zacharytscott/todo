@@ -1,9 +1,12 @@
 # Todo List
 This is a simple todo app built on the MERN stack.
 
+![Preview of the Todo List app](https://github.com/zacharytscott/todo/blob/master/client/src/config.json "The Todo List app")
+
 ## Table of Contents
 1. [How to build this app](#how-to-build-this-app)
 1. [API guide](#api-guide)
+1. 
 
 ## How to build this app
 ### Building and running the database
