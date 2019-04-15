@@ -14,6 +14,9 @@ const TODO_ENDPOINT = `${configJSON.serverURL}/todos`;
 class App extends Component {
   constructor(props) {
     super(props);
+    const savedSelectedTabValue = localStorage.getItem("selectedTab");
+    const selectedTab = !!savedSelectedTabValue ? savedSelectedTabValue : "all";
+
     this.state = {
       todoList: [],
       activeList: [],
@@ -23,7 +26,7 @@ class App extends Component {
       addTaskButtonActive: false,
       addTaskInputValue: "",
       clearCompletedTaskConfirmationVisible: false,
-      selectedTab: "all",
+      selectedTab,
       errorFetchingTodos : false
     }
   }
@@ -149,14 +152,17 @@ class App extends Component {
 
   selectAllTab = () => {
     this.setState({selectedTab : 'all'});
+    window.localStorage.setItem("selectedTab", "all");
   }
 
   selectActiveTab = () => {
     this.setState({selectedTab : 'active'});
+    window.localStorage.setItem("selectedTab", "active");
   }
 
   selectCompletedTab = () => {
     this.setState({selectedTab : 'completed'});
+    window.localStorage.setItem("selectedTab", "completed");
   }
 
   deleteAllCompletedTasks = () => {
@@ -184,7 +190,7 @@ class App extends Component {
 
     let activeTaskContent = null;
     let completedTaskContent = null;
-    let mainContent = null;
+    let fullContent = null;
 
     if(this.state.selectedTab === 'all' || this.state.selectedTab === 'active') {
       activeTaskContent = <div>
@@ -234,7 +240,7 @@ class App extends Component {
     }
 
     if(!this.state.errorFetchingTodos) {
-      mainContent = <div>
+      fullContent = <div>
         <TabSelector 
           selectedTab={this.state.selectedTab}
           selectAllTabHandler={this.selectAllTab}
@@ -242,19 +248,21 @@ class App extends Component {
           selectCompletedTabHandler={this.selectCompletedTab}
           activeCount={this.state.activeCount}
         />
-        {activeTaskContent} 
-        {completedTaskContent}
+        <main>
+          {activeTaskContent} 
+          {completedTaskContent}
+        </main>
       </div>;
     } else {
-      mainContent = <div className="server-error">
+      fullContent = <div className="server-error">
           <h1>Oh no!</h1>
           <p>There was an error connecting to the server.</p>
         </div>;
     }
 
     return (
-      <main className="App">
-        {mainContent}
+      <div className="App">
+        {fullContent}
 
         <ToastContainer
           position="top-right"
@@ -267,7 +275,7 @@ class App extends Component {
           draggable
           pauseOnHover
         />
-      </main>
+      </div>
     );
   }
 }
