@@ -2,7 +2,7 @@
 This is a simple todo app built on the MERN stack.
 
 <div align="middle">
-<img src="https://github.com/zacharytscott/todo/blob/master/img/main.PNG" title="The Todo List app" height="100%" width="100%"/>
+<img src="https://github.com/zacharytscott/todo/blob/master/img/main.png" title="The Todo List app"/>
 </div>
 
 ## Table of Contents
@@ -47,7 +47,7 @@ Congrats, you're all set! 🙌
 ## Features
 
 ### Responsive
-<img src="https://github.com/zacharytscott/todo/blob/master/img/responsive-demo.GIF" title="The Todo List app" height="100%" width="100%"/>
+<img src="https://github.com/zacharytscott/todo/blob/master/img/responsive-demo.gif" title="The Todo List app"/>
 </div>
 
 The app was tested against multiple device dimensions to ensure it looks good and works on all common devices.
