@@ -1,7 +1,9 @@
 # Todo List
 This is a simple todo app built on the MERN stack.
 
-![Preview of the Todo List app](https://github.com/zacharytscott/todo/blob/master/img/main.PNG "The Todo List app")
+<div align="middle">
+<img src="https://github.com/zacharytscott/todo/blob/master/img/main.PNG" title="The Todo List app"/>
+</div>
 
 ## Table of Contents
 1. [How to build this app](#how-to-build-this-app)
