@@ -78,6 +78,7 @@ class App extends Component {
     axios.get(TODO_ENDPOINT)
       .then(response => {
         this.updateLists(response.data);
+        this.setState({errorFetchingTodos : false});
       })
       .catch(error => {
         console.log(error);
