@@ -182,10 +182,10 @@ class App extends Component {
   }
 
   render() {
-    let noCompletedMessage = null;
+    let noTasksCompletedMessage = null;
     
     if(this.state.completedCount === 0) {
-      noCompletedMessage = <p>You don't have any completed tasks. Don't worry, you'll get there!</p>;
+      noTasksCompletedMessage = <p>You don't have any completed tasks. Don't worry, you'll get there!</p>;
     }
 
     let activeTaskContent = null;
@@ -194,27 +194,25 @@ class App extends Component {
 
     if(this.state.selectedTab === 'all' || this.state.selectedTab === 'active') {
       activeTaskContent = <div>
-  
-      <TodoList 
-        list={this.state.activeList}
-        active={true}
-        title="Active Tasks"
-        toggleTaskHandler={this.toggleTaskHandler}
-        deleteTaskHandler={this.deleteTaskHandler}
-      />
-
-      <AddTodo 
-          value={this.state.addTaskInputValue}
-          buttonState={this.state.addTaskButtonActive}
-          addTaskChangeHandler={(event) => this.addTaskChangeHandler(event)}
-          addTaskClickHandler={this.postNewTask}
+        <TodoList 
+          list={this.state.activeList}
+          active={true}
+          title="Active Tasks"
+          toggleTaskHandler={this.toggleTaskHandler}
+          deleteTaskHandler={this.deleteTaskHandler}
         />
+
+        <AddTodo 
+            value={this.state.addTaskInputValue}
+            buttonState={this.state.addTaskButtonActive}
+            addTaskChangeHandler={(event) => this.addTaskChangeHandler(event)}
+            addTaskClickHandler={this.postNewTask}
+          />
       </div>
     }
 
     if(this.state.selectedTab === 'all' || this.state.selectedTab === 'completed') {
       completedTaskContent = <div>
-      
         <TodoList 
           list={this.state.completedList}
           active={false}
@@ -223,7 +221,7 @@ class App extends Component {
           deleteTaskHandler={this.deleteTaskHandler}
         />
 
-        {noCompletedMessage}
+        {noTasksCompletedMessage}
 
         <button 
           id="clearCompleted"
@@ -236,7 +234,7 @@ class App extends Component {
           visible={this.state.clearCompletedTaskConfirmationVisible}
           yesClickHandler={this.deleteAllCompletedTasks}
           cancelClickHandler={this.hideClearCompletedConfirmationDialog}/>
-      </div>;
+      </div>
     }
 
     if(!this.state.errorFetchingTodos) {
@@ -252,12 +250,12 @@ class App extends Component {
           {activeTaskContent} 
           {completedTaskContent}
         </main>
-      </div>;
+      </div>
     } else {
       fullContent = <div className="server-error">
           <h1>Oh no!</h1>
           <p>There was an error connecting to the server.</p>
-        </div>;
+        </div>
     }
 
     return (
