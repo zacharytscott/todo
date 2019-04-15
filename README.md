@@ -46,6 +46,23 @@ Congrats, you're all set! 🙌
 ---
 ## Features
 
+This app allows you to track your daily tasks. Add and manage tasks with the task panels, clear all completed tasks, and filter tasks using the floating controls at the top of the app (your selection is saved in localStorage!).
+
+### Error handling
+
+The app's display doesn't break if it can't connect to the server!
+
+<div align="middle">
+<img src="https://github.com/zacharytscott/todo/blob/master/img/server-error.PNG" title="The Todo List app" width="35%"/>
+</div>
+
+And if there is an API error, we display a toast with [react-toastify](https://github.com/fkhadra/react-toastify):
+
+<div align="middle">
+<img src="https://github.com/zacharytscott/todo/blob/master/img/api-error.PNG" title="The Todo List app" width="35%"/>
+</div>
+
+
 ### Responsive
 <div align="middle">
 <img src="https://github.com/zacharytscott/todo/blob/master/img/responsive-demo.gif" title="The Todo List app"/>
