@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 
 .App {
-  min-height: calc(100vh - 70px);
+  height: 100%;
   width: 80%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 60px;
 }
 
 .App h1,
@@ -14,6 +13,10 @@
   margin-bottom: 10px;
   margin-top: 0px;
   padding-top: 25px;
+}
+
+.App main {
+  padding-top: 60px;
 }
 
 .App #clearCompleted {
