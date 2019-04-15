@@ -6,6 +6,8 @@ import ConfirmationDialog from './components/ConfirmationDialog/ConfirmationDial
 import TabSelector from './components/TabSelector/TabSelector';
 import TodoList from './components/TodoList/TodoList';
 import configJSON from './config';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TODO_ENDPOINT = `${configJSON.serverURL}/todos`;
 
@@ -24,6 +26,10 @@ class App extends Component {
       selectedTab: "all",
       errorFetchingTodos : false
     }
+  }
+
+  displayErrorToast = () => {
+    toast.error("🤔 Uhoh - your request failed!");
   }
 
   updateLists = todoList => {
@@ -64,6 +70,7 @@ class App extends Component {
       })
       .catch(error => {
         console.log(error);
+        this.displayErrorToast();
       });
   }
 
@@ -113,6 +120,7 @@ class App extends Component {
       })
       .catch(error => {
         console.log(error);
+        this.displayErrorToast();
       });
   }
 
@@ -126,6 +134,7 @@ class App extends Component {
       })
       .catch(error => {
         console.log(error);
+        this.displayErrorToast();
       });
   }
 
@@ -161,6 +170,7 @@ class App extends Component {
       })
       .catch(error => {
         console.log(error);
+        this.displayErrorToast();
       });
   }
 
@@ -198,15 +208,15 @@ class App extends Component {
     if(this.state.selectedTab === 'all' || this.state.selectedTab === 'completed') {
       completedTaskContent = <div>
       
-      <TodoList 
-        list={this.state.completedList}
-        active={false}
-        title="Completed Tasks"
-        toggleTaskHandler={this.toggleTaskHandler}
-        deleteTaskHandler={this.deleteTaskHandler}
-      />
+        <TodoList 
+          list={this.state.completedList}
+          active={false}
+          title="Completed Tasks"
+          toggleTaskHandler={this.toggleTaskHandler}
+          deleteTaskHandler={this.deleteTaskHandler}
+        />
 
-      {noCompletedMessage}
+        {noCompletedMessage}
 
         <button 
           id="clearCompleted"
@@ -235,8 +245,8 @@ class App extends Component {
         {completedTaskContent}
       </div>;
     } else {
-      mainContent = <div class="server-error">
-          <h1 class="server-error">Oh no!</h1>
+      mainContent = <div className="server-error">
+          <h1>Oh no!</h1>
           <p>There was an error connecting to the server.</p>
         </div>;
     }
@@ -244,6 +254,18 @@ class App extends Component {
     return (
       <main className="App">
         {mainContent}
+
+        <ToastContainer
+          position="top-right"
+          autoClose={false}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
       </main>
     );
   }
