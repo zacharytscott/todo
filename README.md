@@ -27,7 +27,7 @@ docker run -p 27017:27017 todo_mongo
 If you don't want to use Docker, you will need to run an instance of MongoDB with a database named "todos" and a single collection called "todos".
 ### Building and running the Node.js server
 
-Next, we need to build the server. Once you database is up and running, simply run the following two commands in the project's server directory:
+Next, we need to build the server. Once your database is up and running, simply run the following two commands in the project's server directory:
 
 ```
 npm install
