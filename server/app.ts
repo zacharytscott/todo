@@ -33,7 +33,15 @@ routes.route('/:id').get((request : express.Request, response : express.Response
     const id = request.params.id;
 
     TodoModel.findById(id, (error : any, todo : mongoose.Document) => {
-        response.json(todo)
+        if(typeof error !== 'undefined') {
+            response.status(400).send(error);
+        }
+
+        if(typeof todo !== 'undefined') {
+            response.json(todo);
+        } else {
+            response.status(404).send(`The item with ID ${id} could not be found.`);
+        }
     });
 });
 
