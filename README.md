@@ -241,5 +241,6 @@ This is a simple app created for demo purposes. In the future, I'd like to:
 * Optimize styling with a pre-processor
 * Create a docker-compose file to make deployment easier
 * Tweak transition group animations to make them smoother
+* Make deployment easier with a docker-compose file
 
 Hey! I could keep track of all these with this app! 🤯
