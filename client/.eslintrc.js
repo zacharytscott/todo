@@ -25,6 +25,7 @@ module.exports = {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/no-unescaped-entities": ["off"],
     "no-underscore-dangle" : ["off"],
-    "react/destructuring-assignment" : ["off"]
+    "react/destructuring-assignment" : ["off"],
+    "react/jsx-one-expression-per-line" : ["off"]
   }
 };
