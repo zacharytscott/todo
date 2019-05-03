@@ -82,7 +82,7 @@ class App extends Component {
         headers: { "Content-Type": "application/json" }
       })
       .then(response => {
-        let { todoList: newList } = [...this.state];
+        let newList = [...this.state.todoList];
 
         newList = newList.map(task => {
           if (task._id === response.data._id) {
