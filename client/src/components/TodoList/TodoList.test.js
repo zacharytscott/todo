@@ -14,7 +14,7 @@ describe("TodoList Component", () => {
     wrapper = shallow(
       <TodoList
         list={[]}
-        active={true} // eslint-disable-line react/jsx-boolean-value
+        active
         title="Mock Task Title"
         toggleTaskHandler={() => {}}
         deleteTaskHandler={() => {}}

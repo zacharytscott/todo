@@ -223,7 +223,7 @@ class App extends Component {
         <div>
           <TodoList
             list={this.state.activeList}
-            active={true} // eslint-disable-line react/jsx-boolean-value
+            active
             title="Active Tasks"
             toggleTaskHandler={this.toggleTaskHandler}
             deleteTaskHandler={this.deleteTaskHandler}
