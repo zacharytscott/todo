@@ -17,7 +17,8 @@ class App extends Component {
     const savedSelectedTabValue = localStorage.getItem("selectedTab");
 
     const selectedTab =
-      typeof savedSelectedTabValue !== "undefined"
+      typeof savedSelectedTabValue !== "undefined" &&
+      savedSelectedTabValue !== null
         ? savedSelectedTabValue
         : "all";
 

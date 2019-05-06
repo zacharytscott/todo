@@ -40,9 +40,14 @@ const tabSelector = props => {
   );
 };
 
+tabSelector.defaultProps = {
+  activeCount: 0,
+  selectedTab: "all"
+};
+
 tabSelector.propTypes = {
-  activeCount: PropTypes.number.isRequired,
-  selectedTab: PropTypes.string.isRequired,
+  activeCount: PropTypes.number,
+  selectedTab: PropTypes.string,
   selectAllTabHandler: PropTypes.func.isRequired,
   selectActiveTabHandler: PropTypes.func.isRequired,
   selectCompletedTabHandler: PropTypes.func.isRequired
