@@ -85,7 +85,7 @@ class App extends Component {
       completed: !item.completed
     };
 
-    axios
+    return axios
       .put(`${TODO_ENDPOINT}/${item._id}`, JSON.stringify(newItem), {
         headers: { "Content-Type": "application/json" }
       })

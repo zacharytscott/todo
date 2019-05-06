@@ -3,7 +3,6 @@ import { configure, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import axios from "axios";
 import App from "./App";
-import { TreeTransformer } from "terser";
 
 configure({ adapter: new Adapter() });
 
@@ -57,7 +56,7 @@ describe("App.js ", () => {
     });
   });
 
-  test("app.toggleTodoSuccessHandler sets state properly", () => {
+  test("app.toggleTaskSuccessHandler sets state properly", () => {
     const testCases = [
       {
         data: {
@@ -131,5 +130,51 @@ describe("App.js ", () => {
 
     wrapper.instance().todosFetchErrorHandler(testCase);
     expect(wrapper.state("errorFetchingTodos")).toBeTruthy();
+  });
+
+  test("app.toggleTaskHandler calls the proper function when successful", () => {
+    const testCase = {
+      _id: "5ccf8a04ed291320f4ae8768",
+      text: "My new task",
+      completed: true,
+      __v: 0
+    };
+
+    axios.put.mockResolvedValue(testCase);
+
+    const wrapper = shallow(<App />);
+    const mockToggleTaskSuccessHandler = jest.fn();
+
+    wrapper.instance().toggleTaskSuccessHandler = mockToggleTaskSuccessHandler;
+    wrapper.update();
+    wrapper
+      .instance()
+      .toggleTaskHandler(testCase)
+      .then(() => {
+        expect(mockToggleTaskSuccessHandler).toBeCalledWith(testCase);
+      });
+  });
+
+  test("app.toggleTaskHandler calls the proper function when it fails", () => {
+    const testCase = {
+      _id: "5ccf8a04ed291320f4ae8768",
+      text: "My new task",
+      completed: true,
+      __v: 0
+    };
+
+    axios.put.mockRejectedValue(testCase);
+
+    const wrapper = shallow(<App />);
+    const mockdisplayErrorToast = jest.fn();
+
+    wrapper.instance().displayErrorToast = mockdisplayErrorToast;
+    wrapper.update();
+    wrapper
+      .instance()
+      .toggleTaskHandler(testCase)
+      .then(() => {
+        expect(mockdisplayErrorToast).toHaveBeenCalledTimes(1);
+      });
   });
 });
