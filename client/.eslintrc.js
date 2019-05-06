@@ -27,6 +27,7 @@ module.exports = {
     "react/no-unescaped-entities": ["off"],
     "no-underscore-dangle" : ["off"],
     "react/destructuring-assignment" : ["off"],
-    "react/jsx-one-expression-per-line" : ["off"]
+    "react/jsx-one-expression-per-line" : ["off"],
+    "react/sort-comp" : ["off"]
   }
 };

@@ -40,12 +40,20 @@ class App extends Component {
     axios
       .get(TODO_ENDPOINT)
       .then(response => {
-        this.updateLists(response.data);
-        this.setState({ errorFetchingTodos: false });
+        this.todosFetchSuccessHandler(response);
       })
       .catch(() => {
-        this.setState({ errorFetchingTodos: true });
+        this.todosFetchErrorHandler();
       });
+  }
+
+  todosFetchSuccessHandler(response) {
+    this.updateLists(response.data);
+    this.setState({ errorFetchingTodos: false });
+  }
+
+  todosFetchErrorHandler() {
+    this.setState({ errorFetchingTodos: true });
   }
 
   updateLists = todoList => {
@@ -82,22 +90,25 @@ class App extends Component {
         headers: { "Content-Type": "application/json" }
       })
       .then(response => {
-        let newList = [...this.state.todoList];
-
-        newList = newList.map(task => {
-          if (task._id === response.data._id) {
-            return response.data;
-          }
-          return task;
-        });
-
-        this.updateLists(newList);
+        this.toggleTodoSuccessHandler(response);
       })
-      .catch(error => {
-        console.log(error); // eslint-disable-line no-console
+      .catch(() => {
         this.displayErrorToast();
       });
   };
+
+  toggleTodoSuccessHandler(response) {
+    let newList = [...this.state.todoList];
+
+    newList = newList.map(task => {
+      if (task._id === response.data._id) {
+        return response.data;
+      }
+      return task;
+    });
+
+    this.updateLists(newList);
+  }
 
   displayErrorToast = () => {
     toast.error("🤔 Uhoh - your request failed!");
@@ -122,45 +133,72 @@ class App extends Component {
         headers: { "Content-Type": "application/json" }
       })
       .then(response => {
-        const { todoList, activeList } = this.state;
-        const newTaskData = { ...response.data };
-        const newList = [...todoList];
-        const newActiveList = [...activeList];
-
-        newList.push(newTaskData);
-        newActiveList.push(newTaskData);
-
-        const newState = {
-          todoList: newList,
-          activeList: newActiveList,
-          activeCount: activeList.length + 1,
-          addTaskButtonActive: false,
-          addTaskInputValue: ""
-        };
-
-        this.setState(newState);
+        this.postNewTaskSuccessHandler(response);
       })
-      .catch(error => {
-        console.log(error); // eslint-disable-line no-console
+      .catch(() => {
         this.displayErrorToast();
       });
   };
+
+  postNewTaskSuccessHandler(response) {
+    const { todoList, activeList } = this.state;
+    const newTaskData = { ...response.data };
+    const newList = [...todoList];
+    const newActiveList = [...activeList];
+
+    newList.push(newTaskData);
+    newActiveList.push(newTaskData);
+
+    const newState = {
+      todoList: newList,
+      activeList: newActiveList,
+      activeCount: activeList.length + 1,
+      addTaskButtonActive: false,
+      addTaskInputValue: ""
+    };
+
+    this.setState(newState);
+  }
 
   deleteTaskHandler = item => {
     axios
       .delete(`${TODO_ENDPOINT}/${item._id}`)
       .then(() => {
-        const { todoList } = this.state;
-        let newList = [...todoList];
-
-        newList = newList.filter(task => task._id !== item._id);
-        this.updateLists(newList);
+        this.deleteTaskSuccessHandler(item);
       })
-      .catch(error => {
-        console.log(error); // eslint-disable-line no-console
+      .catch(() => {
         this.displayErrorToast();
       });
   };
+
+  deleteTaskSuccessHandler(item) {
+    const { todoList } = this.state;
+    let newList = [...todoList];
+
+    newList = newList.filter(task => task._id !== item._id);
+    this.updateLists(newList);
+  }
+
+  deleteAllCompletedTasks = () => {
+    this.hideClearCompletedConfirmationDialog();
+
+    axios
+      .delete(`${TODO_ENDPOINT}?completed=true`)
+      .then(() => {
+        this.deleteAllCompletedTasksSuccessHandler();
+      })
+      .catch(() => {
+        this.displayErrorToast();
+      });
+  };
+
+  deleteAllCompletedTasksSuccessHandler() {
+    const { todoList } = this.state;
+    let newList = [...todoList];
+
+    newList = newList.filter(task => !task.completed);
+    this.updateLists(newList);
+  }
 
   showClearCompletedConfirmationDialog = () => {
     this.setState({ clearCompletedTaskConfirmationVisible: true });
@@ -183,24 +221,6 @@ class App extends Component {
   selectCompletedTab = () => {
     this.setState({ selectedTab: "completed" });
     window.localStorage.setItem("selectedTab", "completed");
-  };
-
-  deleteAllCompletedTasks = () => {
-    this.hideClearCompletedConfirmationDialog();
-
-    axios
-      .delete(`${TODO_ENDPOINT}?completed=true`)
-      .then(() => {
-        const { todoList } = this.state;
-        let newList = [...todoList];
-
-        newList = newList.filter(task => !task.completed);
-        this.updateLists(newList);
-      })
-      .catch(error => {
-        console.log(error); // eslint-disable-line no-console
-        this.displayErrorToast();
-      });
   };
 
   render() {
