@@ -218,7 +218,10 @@ class App extends Component {
     let completedTaskContent = null;
     let fullContent = null;
 
-    if (this.stateselectedTab === "all" || this.stateselectedTab === "active") {
+    if (
+      this.state.selectedTab === "all" ||
+      this.state.selectedTab === "active"
+    ) {
       activeTaskContent = (
         <div>
           <TodoList
