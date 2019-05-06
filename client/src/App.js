@@ -130,7 +130,7 @@ class App extends Component {
       completed: false
     };
 
-    axios
+    return axios
       .post(TODO_ENDPOINT, JSON.stringify(newTask), {
         headers: { "Content-Type": "application/json" }
       })
@@ -163,7 +163,7 @@ class App extends Component {
   }
 
   deleteTaskHandler = item => {
-    axios
+    return axios
       .delete(`${TODO_ENDPOINT}/${item._id}`)
       .then(() => {
         this.deleteTaskSuccessHandler(item);
@@ -181,10 +181,10 @@ class App extends Component {
     this.updateLists(newList);
   }
 
-  deleteAllCompletedTasks = () => {
+  deleteAllCompletedTasksHandler = () => {
     this.hideClearCompletedConfirmationDialog();
 
-    axios
+    return axios
       .delete(`${TODO_ENDPOINT}?completed=true`)
       .then(() => {
         this.deleteAllCompletedTasksSuccessHandler();
@@ -291,7 +291,7 @@ class App extends Component {
 
           <ConfirmationDialog
             visible={this.state.clearCompletedTaskConfirmationVisible}
-            yesClickHandler={this.deleteAllCompletedTasks}
+            yesClickHandler={this.deleteAllCompletedTasksHandler}
             cancelClickHandler={this.hideClearCompletedConfirmationDialog}
           />
         </div>
