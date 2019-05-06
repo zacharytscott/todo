@@ -90,14 +90,14 @@ class App extends Component {
         headers: { "Content-Type": "application/json" }
       })
       .then(response => {
-        this.toggleTodoSuccessHandler(response);
+        this.toggleTaskSuccessHandler(response);
       })
       .catch(() => {
         this.displayErrorToast();
       });
   };
 
-  toggleTodoSuccessHandler(response) {
+  toggleTaskSuccessHandler(response) {
     let newList = [...this.state.todoList];
 
     newList = newList.map(task => {
@@ -108,6 +108,8 @@ class App extends Component {
     });
 
     this.updateLists(newList);
+
+    return newList;
   }
 
   displayErrorToast = () => {
