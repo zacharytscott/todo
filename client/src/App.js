@@ -230,7 +230,7 @@ class App extends Component {
 
     if (this.state.completedCount === 0) {
       noTasksCompletedMessage = (
-        <p>
+        <p className="no-completed-tasks-text">
           You don't have any completed tasks. Don't worry, you'll get there!
         </p>
       );
@@ -245,7 +245,7 @@ class App extends Component {
       this.state.selectedTab === "active"
     ) {
       activeTaskContent = (
-        <div>
+        <div className="active-tasks">
           <TodoList
             list={this.state.activeList}
             active
@@ -269,7 +269,7 @@ class App extends Component {
       this.state.selectedTab === "completed"
     ) {
       completedTaskContent = (
-        <div>
+        <div className="completed-tasks">
           <TodoList
             list={this.state.completedList}
             active={false}

@@ -2,7 +2,9 @@ import React from "react";
 import { configure, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
 import App from "./App";
+import TabSelector from "./components/TabSelector/TabSelector";
 
 configure({ adapter: new Adapter() });
 
@@ -395,5 +397,76 @@ describe("App.js ", () => {
     wrapper.instance().selectCompletedTab();
 
     expect(wrapper.state("selectedTab")).toEqual("completed");
+  });
+
+  test("app renders proper message when no tasks are completed", () => {
+    const wrapper = shallow(<App />);
+
+    wrapper.setState({
+      completedCount: 0
+    });
+
+    expect(wrapper.exists(".no-completed-tasks-text")).toBeTruthy();
+  });
+
+  test("app does not render 'no tasks completed' message when there are completed tasks", () => {
+    const wrapper = shallow(<App />);
+
+    wrapper.setState({
+      completedCount: 1
+    });
+
+    expect(wrapper.exists(".no-completed-tasks-text")).toBeFalsy();
+  });
+
+  test("app renders both active and completed task lists when the 'all' tab is selected", () => {
+    const wrapper = shallow(<App />);
+
+    wrapper.setState({
+      selectedTab: "all"
+    });
+
+    expect(wrapper.exists(".active-tasks")).toBeTruthy();
+    expect(wrapper.exists(".completed-tasks")).toBeTruthy();
+  });
+
+  test("app renders only the active task list when the 'active' tab is selected", () => {
+    const wrapper = shallow(<App />);
+
+    wrapper.setState({
+      selectedTab: "active"
+    });
+
+    expect(wrapper.exists(".active-tasks")).toBeTruthy();
+    expect(wrapper.exists(".completed-tasks")).toBeFalsy();
+  });
+
+  test("app renders only the completed task list when the 'completed' tab is selected", () => {
+    const wrapper = shallow(<App />);
+
+    wrapper.setState({
+      selectedTab: "completed"
+    });
+
+    expect(wrapper.exists(".active-tasks")).toBeFalsy();
+    expect(wrapper.exists(".completed-tasks")).toBeTruthy();
+  });
+
+  test("app renders only an error message if an error occurs when fetching todos", () => {
+    const wrapper = shallow(<App />);
+
+    wrapper.setState({
+      errorFetchingTodos: true
+    });
+
+    expect(wrapper.exists(".server-error")).toBeTruthy();
+  });
+
+  test("app renders the TabSelector, main, and ToastContainer if there is no error when fetching todos", () => {
+    const wrapper = shallow(<App />);
+
+    expect(wrapper.exists(TabSelector)).toBeTruthy();
+    expect(wrapper.exists("main")).toBeTruthy();
+    expect(wrapper.exists(ToastContainer)).toBeTruthy();
   });
 });
