@@ -43,8 +43,7 @@ class App extends Component {
         this.updateLists(response.data);
         this.setState({ errorFetchingTodos: false });
       })
-      .catch(error => {
-        console.log(error); // eslint-disable-line no-console
+      .catch(() => {
         this.setState({ errorFetchingTodos: true });
       });
   }
