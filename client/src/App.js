@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,79 +11,117 @@ import "react-toastify/dist/ReactToastify.css";
 
 const TODO_ENDPOINT = `${configJSON.serverURL}/todos`;
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    const savedSelectedTabValue = localStorage.getItem("selectedTab");
+const App = () => {
+  const savedSelectedTabValue = localStorage.getItem("selectedTab");
 
-    const selectedTab =
-      typeof savedSelectedTabValue !== "undefined" &&
-      savedSelectedTabValue !== null
-        ? savedSelectedTabValue
-        : "all";
+  const initialTab =
+    typeof savedSelectedTabValue !== "undefined" &&
+    savedSelectedTabValue !== null
+      ? savedSelectedTabValue
+      : "all";
 
-    this.state = {
-      todoList: [],
-      activeList: [],
-      activeCount: null,
-      completedList: [],
-      completedCount: null,
-      addTaskButtonActive: false,
-      addTaskInputValue: "",
-      clearCompletedTaskConfirmationVisible: false,
-      selectedTab,
-      errorFetchingTodos: false
-    };
-  }
+  const [todoList, setTodoList] = useState([]);
+  const [activeList, setActiveList] = useState([]);
+  const [activeCount, setActiveCount] = useState(null);
+  const [completedList, setCompletedList] = useState([]);
+  const [completedCount, setCompletedCount] = useState(null);
+  const [addTaskButtonActive, setAddTaskButtonActive] = useState(false);
+  const [addTaskInputValue, setAddTaskInputValue] = useState("");
+  const [
+    clearCompletedTaskConfirmationVisible,
+    setClearCompletedTaskConfirmationVisible
+  ] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(initialTab);
+  const [errorFetchingTodos, setErrorFetchingTodos] = useState(false);
 
-  async componentDidMount() {
-    await this.fetchTodos();
-  }
+  const showClearCompletedConfirmationDialog = () => {
+    setClearCompletedTaskConfirmationVisible(true);
+  };
 
-  fetchTodos() {
-    return axios
-      .get(TODO_ENDPOINT)
-      .then(response => {
-        this.todosFetchSuccessHandler(response);
-      })
-      .catch(() => {
-        this.todosFetchErrorHandler();
-      });
-  }
+  const hideClearCompletedConfirmationDialog = () => {
+    setClearCompletedTaskConfirmationVisible(false);
+  };
 
-  todosFetchSuccessHandler(response) {
-    this.updateLists(response.data);
-    this.setState({ errorFetchingTodos: false });
-  }
+  const selectAllTab = () => {
+    setSelectedTab("all");
+    window.localStorage.setItem("selectedTab", "all");
+  };
 
-  todosFetchErrorHandler() {
-    this.setState({ errorFetchingTodos: true });
-  }
+  const selectActiveTab = () => {
+    setSelectedTab("active");
+    window.localStorage.setItem("selectedTab", "active");
+  };
 
-  updateLists = todoList => {
-    const completedList = [];
-    const activeList = [];
+  const selectCompletedTab = () => {
+    setSelectedTab("completed");
+    window.localStorage.setItem("selectedTab", "completed");
+  };
 
-    todoList.forEach(todo => {
+  const updateLists = newTodoList => {
+    const newCompletedList = [];
+    const newActiveList = [];
+
+    newTodoList.forEach(todo => {
       if (todo.completed) {
-        completedList.push(todo);
+        newCompletedList.push(todo);
       } else {
-        activeList.push(todo);
+        newActiveList.push(todo);
       }
     });
 
-    const activeCount = activeList.length;
-    const completedCount = completedList.length;
-    this.setState({
-      todoList,
-      activeList,
-      activeCount,
-      completedList,
-      completedCount
-    });
+    const newActiveCount = newActiveList.length;
+    const newCompletedCount = newCompletedList.length;
+    setTodoList(newTodoList);
+    setActiveList(newActiveList);
+    setActiveCount(newActiveCount);
+    setCompletedList(newCompletedList);
+    setCompletedCount(newCompletedCount);
   };
 
-  toggleTaskHandler = item => {
+  const todosFetchSuccessHandler = response => {
+    updateLists(response.data);
+    setErrorFetchingTodos(false);
+  };
+
+  const todosFetchErrorHandler = () => {
+    setErrorFetchingTodos(true);
+  };
+
+  const fetchTodos = () => {
+    return axios
+      .get(TODO_ENDPOINT)
+      .then(response => {
+        todosFetchSuccessHandler(response);
+      })
+      .catch(() => {
+        todosFetchErrorHandler();
+      });
+  };
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
+  const toggleTaskSuccessHandler = response => {
+    let newList = [...todoList];
+
+    newList = newList.map(task => {
+      if (task._id === response.data._id) {
+        return response.data;
+      }
+      return task;
+    });
+
+    updateLists(newList);
+
+    return newList;
+  };
+
+  const displayErrorToast = () => {
+    toast.error("🤔 Uhoh - your request failed!");
+  };
+
+  const toggleTaskHandler = item => {
     const newItem = {
       text: item.text,
       completed: !item.completed
@@ -94,43 +132,40 @@ class App extends Component {
         headers: { "Content-Type": "application/json" }
       })
       .then(response => {
-        this.toggleTaskSuccessHandler(response);
+        toggleTaskSuccessHandler(response);
       })
       .catch(() => {
-        this.displayErrorToast();
+        displayErrorToast();
       });
   };
 
-  toggleTaskSuccessHandler(response) {
-    let newList = [...this.state.todoList];
-
-    newList = newList.map(task => {
-      if (task._id === response.data._id) {
-        return response.data;
-      }
-      return task;
-    });
-
-    this.updateLists(newList);
-
-    return newList;
-  }
-
-  displayErrorToast = () => {
-    toast.error("🤔 Uhoh - your request failed!");
+  const addTaskChangeHandler = event => {
+    const newAddTaskInputValue = event.target.value;
+    const newAddTaskButtonActive = event.target.value !== "";
+    setAddTaskInputValue(newAddTaskInputValue);
+    setAddTaskButtonActive(newAddTaskButtonActive);
   };
 
-  addTaskChangeHandler = event => {
-    const addTaskInputValue = event.target.value;
-    const addTaskButtonActive = event.target.value !== "";
-    this.setState({ addTaskInputValue, addTaskButtonActive });
+  const postNewTaskSuccessHandler = response => {
+    const newTaskData = { ...response.data };
+    const newList = [...todoList];
+    const newActiveList = [...activeList];
+
+    newList.push(newTaskData);
+    newActiveList.push(newTaskData);
+
+    setTodoList(newList);
+    setActiveList(newActiveList);
+    setActiveCount(activeList.length + 1);
+    setAddTaskButtonActive(false);
+    setAddTaskInputValue("");
   };
 
-  postNewTask = () => {
-    const { addTaskInputValue } = this.state;
+  const postNewTask = () => {
+    const newAddTaskInputValue = addTaskInputValue;
 
     const newTask = {
-      text: addTaskInputValue,
+      text: newAddTaskInputValue,
       completed: false
     };
 
@@ -139,212 +174,159 @@ class App extends Component {
         headers: { "Content-Type": "application/json" }
       })
       .then(response => {
-        this.postNewTaskSuccessHandler(response);
+        postNewTaskSuccessHandler(response);
       })
       .catch(() => {
-        this.displayErrorToast();
+        displayErrorToast();
       });
   };
 
-  postNewTaskSuccessHandler(response) {
-    const { todoList, activeList } = this.state;
-    const newTaskData = { ...response.data };
-    const newList = [...todoList];
-    const newActiveList = [...activeList];
-
-    newList.push(newTaskData);
-    newActiveList.push(newTaskData);
-
-    const newState = {
-      todoList: newList,
-      activeList: newActiveList,
-      activeCount: activeList.length + 1,
-      addTaskButtonActive: false,
-      addTaskInputValue: ""
-    };
-
-    this.setState(newState);
-  }
-
-  deleteTaskHandler = item => {
-    return axios
-      .delete(`${TODO_ENDPOINT}/${item._id}`)
-      .then(() => {
-        this.deleteTaskSuccessHandler(item);
-      })
-      .catch(() => {
-        this.displayErrorToast();
-      });
-  };
-
-  deleteTaskSuccessHandler(item) {
-    const { todoList } = this.state;
+  const deleteTaskSuccessHandler = item => {
     let newList = [...todoList];
 
     newList = newList.filter(task => task._id !== item._id);
-    this.updateLists(newList);
-  }
+    updateLists(newList);
+  };
 
-  deleteAllCompletedTasksHandler = () => {
-    this.hideClearCompletedConfirmationDialog();
+  const deleteTaskHandler = item => {
+    return axios
+      .delete(`${TODO_ENDPOINT}/${item._id}`)
+      .then(() => {
+        deleteTaskSuccessHandler(item);
+      })
+      .catch(() => {
+        displayErrorToast();
+      });
+  };
+
+  const deleteAllCompletedTasksSuccessHandler = () => {
+    let newList = [...todoList];
+
+    newList = newList.filter(task => !task.completed);
+    updateLists(newList);
+  };
+
+  const deleteAllCompletedTasksHandler = () => {
+    hideClearCompletedConfirmationDialog();
 
     return axios
       .delete(`${TODO_ENDPOINT}?completed=true`)
       .then(() => {
-        this.deleteAllCompletedTasksSuccessHandler();
+        deleteAllCompletedTasksSuccessHandler();
       })
       .catch(() => {
-        this.displayErrorToast();
+        displayErrorToast();
       });
   };
 
-  deleteAllCompletedTasksSuccessHandler() {
-    const { todoList } = this.state;
-    let newList = [...todoList];
+  let noTasksCompletedMessage = null;
 
-    newList = newList.filter(task => !task.completed);
-    this.updateLists(newList);
+  if (completedCount === 0) {
+    noTasksCompletedMessage = (
+      <p className="no-completed-tasks-text">
+        You don't have any completed tasks. Don't worry, you'll get there!
+      </p>
+    );
   }
 
-  showClearCompletedConfirmationDialog = () => {
-    this.setState({ clearCompletedTaskConfirmationVisible: true });
-  };
+  let activeTaskContent = null;
+  let completedTaskContent = null;
+  let fullContent = null;
 
-  hideClearCompletedConfirmationDialog = () => {
-    this.setState({ clearCompletedTaskConfirmationVisible: false });
-  };
+  if (selectedTab === "all" || selectedTab === "active") {
+    activeTaskContent = (
+      <div className="active-tasks">
+        <TodoList
+          list={activeList}
+          active
+          title="Active Tasks"
+          toggleTaskHandler={toggleTaskHandler}
+          deleteTaskHandler={deleteTaskHandler}
+        />
 
-  selectAllTab = () => {
-    this.setState({ selectedTab: "all" });
-    window.localStorage.setItem("selectedTab", "all");
-  };
-
-  selectActiveTab = () => {
-    this.setState({ selectedTab: "active" });
-    window.localStorage.setItem("selectedTab", "active");
-  };
-
-  selectCompletedTab = () => {
-    this.setState({ selectedTab: "completed" });
-    window.localStorage.setItem("selectedTab", "completed");
-  };
-
-  render() {
-    let noTasksCompletedMessage = null;
-
-    if (this.state.completedCount === 0) {
-      noTasksCompletedMessage = (
-        <p className="no-completed-tasks-text">
-          You don't have any completed tasks. Don't worry, you'll get there!
-        </p>
-      );
-    }
-
-    let activeTaskContent = null;
-    let completedTaskContent = null;
-    let fullContent = null;
-
-    if (
-      this.state.selectedTab === "all" ||
-      this.state.selectedTab === "active"
-    ) {
-      activeTaskContent = (
-        <div className="active-tasks">
-          <TodoList
-            list={this.state.activeList}
-            active
-            title="Active Tasks"
-            toggleTaskHandler={this.toggleTaskHandler}
-            deleteTaskHandler={this.deleteTaskHandler}
-          />
-
-          <AddTodo
-            value={this.state.addTaskInputValue}
-            buttonState={this.state.addTaskButtonActive}
-            addTaskChangeHandler={event => this.addTaskChangeHandler(event)}
-            addTaskClickHandler={this.postNewTask}
-          />
-        </div>
-      );
-    }
-
-    if (
-      this.state.selectedTab === "all" ||
-      this.state.selectedTab === "completed"
-    ) {
-      completedTaskContent = (
-        <div className="completed-tasks">
-          <TodoList
-            list={this.state.completedList}
-            active={false}
-            title="Completed Tasks"
-            toggleTaskHandler={this.toggleTaskHandler}
-            deleteTaskHandler={this.deleteTaskHandler}
-          />
-
-          {noTasksCompletedMessage}
-
-          <button
-            id="clearCompleted"
-            className={this.state.completedCount === 0 ? null : "active"}
-            onClick={this.showClearCompletedConfirmationDialog}
-            type="button"
-          >
-            Clear all completed tasks
-          </button>
-
-          <ConfirmationDialog
-            visible={this.state.clearCompletedTaskConfirmationVisible}
-            yesClickHandler={this.deleteAllCompletedTasksHandler}
-            cancelClickHandler={this.hideClearCompletedConfirmationDialog}
-          />
-        </div>
-      );
-    }
-
-    if (!this.state.errorFetchingTodos) {
-      fullContent = (
-        <div>
-          <TabSelector
-            selectedTab={this.state.selectedTab}
-            selectAllTabHandler={this.selectAllTab}
-            selectActiveTabHandler={this.selectActiveTab}
-            selectCompletedTabHandler={this.selectCompletedTab}
-            activeCount={this.state.activeCount}
-          />
-          <main>
-            {activeTaskContent}
-            {completedTaskContent}
-          </main>
-        </div>
-      );
-    } else {
-      fullContent = (
-        <div className="server-error">
-          <h1>Oh no!</h1>
-          <p>There was an error connecting to the server.</p>
-        </div>
-      );
-    }
-
-    return (
-      <div className="App">
-        {fullContent}
-
-        <ToastContainer
-          position="top-right"
-          autoClose={false}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnVisibilityChange
-          draggable
-          pauseOnHover
+        <AddTodo
+          value={addTaskInputValue}
+          buttonState={addTaskButtonActive}
+          addTaskChangeHandler={event => addTaskChangeHandler(event)}
+          addTaskClickHandler={postNewTask}
         />
       </div>
     );
   }
-}
+
+  if (selectedTab === "all" || selectedTab === "completed") {
+    completedTaskContent = (
+      <div className="completed-tasks">
+        <TodoList
+          list={completedList}
+          active={false}
+          title="Completed Tasks"
+          toggleTaskHandler={toggleTaskHandler}
+          deleteTaskHandler={deleteTaskHandler}
+        />
+
+        {noTasksCompletedMessage}
+
+        <button
+          id="clearCompleted"
+          className={completedCount === 0 ? null : "active"}
+          onClick={showClearCompletedConfirmationDialog}
+          type="button"
+        >
+          Clear all completed tasks
+        </button>
+
+        <ConfirmationDialog
+          visible={clearCompletedTaskConfirmationVisible}
+          yesClickHandler={deleteAllCompletedTasksHandler}
+          cancelClickHandler={hideClearCompletedConfirmationDialog}
+        />
+      </div>
+    );
+  }
+
+  if (!errorFetchingTodos) {
+    fullContent = (
+      <div>
+        <TabSelector
+          selectedTab={selectedTab}
+          selectAllTabHandler={selectAllTab}
+          selectActiveTabHandler={selectActiveTab}
+          selectCompletedTabHandler={selectCompletedTab}
+          activeCount={activeCount}
+        />
+        <main>
+          {activeTaskContent}
+          {completedTaskContent}
+        </main>
+      </div>
+    );
+  } else {
+    fullContent = (
+      <div className="server-error">
+        <h1>Oh no!</h1>
+        <p>There was an error connecting to the server.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="App">
+      {fullContent}
+
+      <ToastContainer
+        position="top-right"
+        autoClose={false}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnVisibilityChange
+        draggable
+        pauseOnHover
+      />
+    </div>
+  );
+};
 
 export default App;
