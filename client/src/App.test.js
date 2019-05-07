@@ -469,4 +469,39 @@ describe("App.js ", () => {
     expect(wrapper.exists("main")).toBeTruthy();
     expect(wrapper.exists(ToastContainer)).toBeTruthy();
   });
+
+  test("app.displayErrorToast displays toast without crashing", () => {
+    const wrapper = shallow(<App />);
+    wrapper.instance().displayErrorToast();
+  });
+
+  test("app calls the proper handler when fetchTodos succeeds", () => {
+    const wrapper = shallow(<App />);
+
+    const mockTodosFetchSuccessHandler = jest.fn();
+
+    wrapper.instance().todosFetchSuccessHandler = mockTodosFetchSuccessHandler;
+    wrapper
+      .instance()
+      .fetchTodos()
+      .then(() => {
+        expect(mockTodosFetchSuccessHandler).toHaveBeenCalledTimes(2);
+      });
+  });
+
+  test("app calls the proper error handler when fetchTodos fails", () => {
+    jest.clearAllMocks();
+    axios.get.mockRejectedValue(new Error("An error occurred!"));
+    const wrapper = shallow(<App />);
+
+    const mockTodosFetchErrorHandler = jest.fn();
+
+    wrapper.instance().todosFetchErrorHandler = mockTodosFetchErrorHandler;
+    wrapper
+      .instance()
+      .fetchTodos()
+      .catch(() => {
+        expect(mockTodosFetchErrorHandler).toHaveBeenCalledTimes(1);
+      });
+  });
 });

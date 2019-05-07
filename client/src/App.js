@@ -36,8 +36,12 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-    axios
+  async componentDidMount() {
+    await this.fetchTodos();
+  }
+
+  fetchTodos() {
+    return axios
       .get(TODO_ENDPOINT)
       .then(response => {
         this.todosFetchSuccessHandler(response);
